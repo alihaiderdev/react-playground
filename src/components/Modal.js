@@ -29,7 +29,6 @@ const CustomModal = ({ title, isModalOpen, closeModal, username }) => {
       const user = await res.json();
       setUser(user);
       setIsLoading(false);
-      console.log({ user });
     } catch (error) {
       setError(error.message);
       setIsLoading(false);

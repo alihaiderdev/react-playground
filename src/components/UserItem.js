@@ -15,12 +15,7 @@ const UserItem = ({ user, index }) => {
       className='col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3'
       key={user.id}
     >
-      <div
-        // className={`shadow-2xl p-4 rounded-lg ${
-        //   index % 2 !== 0 ? 'text-left' : 'text-right'
-        // }`}
-        className={`shadow-2xl p-4 rounded-lg text-center`}
-      >
+      <div className={`shadow-2xl p-4 rounded-lg text-center`}>
         <img
           className='w-48 rounded-full'
           src={user.avatar_url}

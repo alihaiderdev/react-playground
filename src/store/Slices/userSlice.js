@@ -7,11 +7,17 @@ const initialState = {
   error: '',
 };
 
-// Generates pending, fulfilled and rejected action types
-const fetchUsers = createAsyncThunk('user/fetchUsers', () => {
-  return axios
-    .get('https://jsonplaceholders.typicode.com/users')
-    .then((response) => response.data.map((user) => user.id));
+const TOKEN = process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN;
+
+export const fetchUsers = createAsyncThunk('user/fetchUsers', () => {
+  return axios('https://api.github.com/users?since=0&per_page=100', {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  })
+    .then(({ data }) => data)
+    .catch((error) => error.message);
 });
 
 const userSlice = createSlice({
@@ -24,12 +30,10 @@ const userSlice = createSlice({
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.loading = false;
       state.users = action.payload;
-      state.error = '';
     });
     builder.addCase(fetchUsers.rejected, (state, action) => {
       state.loading = false;
-      state.users = [];
-      state.error = action.error.message;
+      state.error = action.payload;
     });
   },
 });

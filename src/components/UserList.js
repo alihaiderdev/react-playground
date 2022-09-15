@@ -8,7 +8,7 @@ const UserList = ({ isLoading, users }) => {
       <div className='grid grid-cols-12 gap-6 pt-16'>
         {users?.length > 0 &&
           users.map((user, index) => {
-            return <UserItem user={user} index={index} />;
+            return <UserItem key={index} user={user} index={index} />;
           })}
       </div>
     )

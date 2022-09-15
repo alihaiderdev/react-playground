@@ -1,30 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
-import reduxLogger from 'redux-logger';
+// import reduxLogger from 'redux-logger';
 
-import cakeReducer from './Slices/cakeSlice';
-import iceCreamReducer from './Slices/iceCreamSlice';
+// import cakeReducer from './Slices/cakeSlice';
+// import iceCreamReducer from './Slices/iceCreamSlice';
+// import questionsReducer from './Slices/questionsSlice';
 import userReducer from './Slices/userSlice';
 
 // const logger = reduxLogger.createLogger();
 
 const store = configureStore({
   reducer: {
-    cake: {
-      numOfCakes: 20,
-    },
-    iceCream: {
-      numOfIcecreams: 10,
-    },
-    user: {
-      loading: false,
-      users: [],
-      error: '',
-    },
-  },
-  reducer: {
-    cake: cakeReducer,
-    iceCream: iceCreamReducer,
+    // cake: cakeReducer,
+    // iceCream: iceCreamReducer,
     user: userReducer,
+    // questions: questionsReducer,
   },
   //   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
