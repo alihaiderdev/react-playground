@@ -12,7 +12,7 @@ const TOKEN = process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN;
 export const fetchUsers = createAsyncThunk('user/fetchUsers', (query) => {
   return axios(
     query
-      ? `https://api.github.com/search/users?q=${query}`
+      ? `https://api.github.com/search/users?q=${query}&per_page=100`
       : 'https://api.github.com/users?since=0&per_page=100',
     {
       headers: {
