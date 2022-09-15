@@ -13,6 +13,7 @@ import HomeScreen from './screens/HomeScreen';
 // import Home from './screens/Home';
 import { TodosContextProvider } from './context/TodoContext';
 import UsersScreen from './screens/UsersScreen';
+import SearchScreen from './screens/SearchScreen';
 // import FormScreen from './screens/FormScreen';
 // import ChangePassword from './screens/Auth/ChangePassword';
 // import Signup from './screens/Auth/Signup';
@@ -89,6 +90,7 @@ const App = () => {
         <Route path='/auth/change-password' element={<ChangePassword />} />
         <Route path='/form' element={<FormScreen />} /> */}
         <Route path='/' element={<UsersScreen />} />
+        <Route path='/search' element={<SearchScreen />} />
 
         {/* <Route path='/' element={<Home />} /> */}
         {/* <Route path='/' element={<CreateArtScreen />} /> */}
