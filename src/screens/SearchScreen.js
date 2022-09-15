@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import UserList from '../components/UserList';
 import { fetchUsers } from '../store/Slices/userSlice';
 
 const SearchScreen = () => {
   let [searchParams, _] = useSearchParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoading, error, users } = useSelector((state) => state.user);
   console.log(searchParams.get('q'), { isLoading, error, users });
@@ -19,12 +20,25 @@ const SearchScreen = () => {
       <h1 className='text-3xl font-black text-center my-5 text-indigo-600'>
         Search Results:
       </h1>
+
       <main className='container mx-auto px-4 sm:px-8 md:px-12'>
+        <button
+          className='bg-indigo-600 p-3 text-white rounded-md'
+          onClick={() => navigate('/')}
+        >
+          Back to Home
+        </button>
         {isLoading && <h1 className='text-indigo-600 text-2xl'>Loading...</h1>}
         {!isLoading && error && (
           <h1 className='text-indigo-600 text-2xl'>{error}</h1>
         )}
-        <UserList users={users} isLoading={isLoading} />
+        {users?.length > 0 ? (
+          <UserList users={users} isLoading={isLoading} />
+        ) : (
+          <h1 className='text-3xl font-black text-center my-5 text-indigo-600'>
+            No result found by your query "{searchParams.get('q')}"
+          </h1>
+        )}
       </main>
     </>
   );
