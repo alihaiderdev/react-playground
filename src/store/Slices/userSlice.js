@@ -5,6 +5,7 @@ const initialState = {
   isLoading: false,
   users: [],
   error: '',
+  total: 0,
 };
 
 const TOKEN = process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN;
@@ -21,7 +22,10 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', (query) => {
       },
     }
   )
-    .then(({ data }) => (query ? data?.items : data))
+    .then(({ data }) => {
+      console.log(data);
+      return query ? [data?.items, data?.total_count] : [data, 0];
+    })
     .catch((error) => error.message);
 });
 
@@ -34,7 +38,8 @@ const userSlice = createSlice({
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.users = action.payload;
+      state.users = action.payload[0];
+      state.total = action.payload[1];
     });
     builder.addCase(fetchUsers.rejected, (state, action) => {
       state.isLoading = false;

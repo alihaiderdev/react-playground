@@ -10,13 +10,13 @@ const groupNameFormatter = (name) => {
 };
 
 const QuestionsScreen = () => {
-  const [questions, setQuestions] = useState({});
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  // const { isLoading, error, questions } = useSelector(
-  //   (store) => store.questions
-  // );
-  // console.log({ isLoading, error, questions });
+  // const [questions, setQuestions] = useState({});
+  // const [error, setError] = useState('');
+  // const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, error, questions } = useSelector(
+    (store) => store.questions
+  );
+  console.log({ isLoading, error, questions });
 
   const [answers, setAnswers] = useState(
     Object.entries(questions)
@@ -35,36 +35,36 @@ const QuestionsScreen = () => {
     }
   }, [Object.keys(questions).length]);
 
-  const getQuestionsList = async ({ token, cookie }) => {
-    const config = {
-      method: 'get',
-      url: 'http://172.105.60.26/api/v1/questions',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // Cookie: `XSRF-TOKEN=${cookie}`,
-      },
-    };
-    try {
-      setIsLoading(true);
-      const { data } = await axios(config);
-      setQuestions(data);
-      // const removed = 'prescription-and-lab-advice';
-      // const { [removed]: remove, ...rest } = data;
-      // setQuestions(rest);
-    } catch (error) {
-      console.log(error.message);
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  useEffect(async () => {
-    await getQuestionsList({
-      token: '191|MJ6hvwefonXxMtX3PxT5fGCve277Ld629nF3LQbz',
-      cookie:
-        'eyJpdiI6IlIvejBTaEFzRTJ0NXI1ell6eUxSd1E9PSIsInZhbHVlIjoiYnd3YzM5dFVLWXd6SGNXdzJJNnhQZ2M2M0Z2ZFdtYkNtMHUyN3hGbitWK1dnVDV1d1hjaXl4bGhYM3BRQ215YXFuVEI2UDNBMDh0YWE2ZnpQM0VaZWpoOU5odWVCREhURmJHdmp0SVNnVE4rMlNDWUpzV053UjNmeXN5aEZrRkIiLCJtYWMiOiIyY2NjZTk2ZDMyMWExYjhlNzIwZGE2YjA0MTdlMTE1NTg1MzZkM2M3OWJkMDY2MDdlMzI0NGQ0YzlmMzljN2RjIiwidGFnIjoiIn0%3D; delher_session=eyJpdiI6Ik1zV2doUE92YUpIcjV5UVdLcWhGVEE9PSIsInZhbHVlIjoiWWN4NkRiQUtTTlVLSGtMRVovUUQ5R3d4RFBycFZyeTF0dVRFYUQzTWdTVTI3UkFOeVhzQzBxWVgwMzlyaXgwYWgwa3ZtZ2YwZjZ6WElLS285SVlsdncrYm4wYVV0YXBKVUZlVk13aEgyeSs1d0U0UmUrQk8rY2dvNXhLdVgzcXkiLCJtYWMiOiJiNDAyY2RlODUwODE5MDViZDc3YTYxM2RmNDViYWNkYjAwMTlkODc0ZjgxMzNhOWZkNTdjNGZiMTkzNDFkYTJlIiwidGFnIjoiIn0%3D',
-    });
-  }, []);
+  // const getQuestionsList = async ({ token, cookie }) => {
+  //   const config = {
+  //     method: 'get',
+  //     url: 'http://172.105.60.26/api/v1/questions',
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //       // Cookie: `XSRF-TOKEN=${cookie}`,
+  //     },
+  //   };
+  //   try {
+  //     setIsLoading(true);
+  //     const { data } = await axios(config);
+  //     setQuestions(data);
+  //     // const removed = 'prescription-and-lab-advice';
+  //     // const { [removed]: remove, ...rest } = data;
+  //     // setQuestions(rest);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //     setError(error.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  // useEffect(async () => {
+  //   await getQuestionsList({
+  //     token: '191|MJ6hvwefonXxMtX3PxT5fGCve277Ld629nF3LQbz',
+  //     cookie:
+  //       'eyJpdiI6IlIvejBTaEFzRTJ0NXI1ell6eUxSd1E9PSIsInZhbHVlIjoiYnd3YzM5dFVLWXd6SGNXdzJJNnhQZ2M2M0Z2ZFdtYkNtMHUyN3hGbitWK1dnVDV1d1hjaXl4bGhYM3BRQ215YXFuVEI2UDNBMDh0YWE2ZnpQM0VaZWpoOU5odWVCREhURmJHdmp0SVNnVE4rMlNDWUpzV053UjNmeXN5aEZrRkIiLCJtYWMiOiIyY2NjZTk2ZDMyMWExYjhlNzIwZGE2YjA0MTdlMTE1NTg1MzZkM2M3OWJkMDY2MDdlMzI0NGQ0YzlmMzljN2RjIiwidGFnIjoiIn0%3D; delher_session=eyJpdiI6Ik1zV2doUE92YUpIcjV5UVdLcWhGVEE9PSIsInZhbHVlIjoiWWN4NkRiQUtTTlVLSGtMRVovUUQ5R3d4RFBycFZyeTF0dVRFYUQzTWdTVTI3UkFOeVhzQzBxWVgwMzlyaXgwYWgwa3ZtZ2YwZjZ6WElLS285SVlsdncrYm4wYVV0YXBKVUZlVk13aEgyeSs1d0U0UmUrQk8rY2dvNXhLdVgzcXkiLCJtYWMiOiJiNDAyY2RlODUwODE5MDViZDc3YTYxM2RmNDViYWNkYjAwMTlkODc0ZjgxMzNhOWZkNTdjNGZiMTkzNDFkYTJlIiwidGFnIjoiIn0%3D',
+  //   });
+  // }, []);
 
   // console.log(questions);
 

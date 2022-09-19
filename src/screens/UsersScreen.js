@@ -5,7 +5,8 @@ import UserList from '../components/UserList';
 import { fetchUsers } from '../store/Slices/userSlice';
 
 const UsersScreen = () => {
-  const { isLoading, error, users } = useSelector((state) => state.user);
+  const { isLoading, error, users, total } = useSelector((state) => state.user);
+  // console.log({ isLoading, error, users, total });
   const dispatch = useDispatch();
 
   useEffect(() => {

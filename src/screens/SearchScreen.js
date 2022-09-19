@@ -6,10 +6,10 @@ import { fetchUsers } from '../store/Slices/userSlice';
 
 const SearchScreen = () => {
   let [searchParams, _] = useSearchParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { isLoading, error, users } = useSelector((state) => state.user);
-  console.log(searchParams.get('q'), { isLoading, error, users });
+  const dispatch = useDispatch(),
+    navigate = useNavigate();
+  const { isLoading, error, users, total } = useSelector((state) => state.user);
+  // console.log({ isLoading, error, users, total });
 
   useEffect(() => {
     dispatch(fetchUsers(searchParams.get('q')));
@@ -18,7 +18,7 @@ const SearchScreen = () => {
   return (
     <>
       <h1 className='text-3xl font-black text-center my-5 text-indigo-600'>
-        Search Results:
+        Search Results: ({total})
       </h1>
 
       <main className='container mx-auto px-4 sm:px-8 md:px-12'>
@@ -32,7 +32,7 @@ const SearchScreen = () => {
         {!isLoading && error && (
           <h1 className='text-indigo-600 text-2xl'>{error}</h1>
         )}
-        {users?.length > 0 ? (
+        {!isLoading && users?.length > 0 ? (
           <UserList users={users} isLoading={isLoading} />
         ) : (
           <h1 className='text-3xl font-black text-center my-5 text-indigo-600'>

@@ -14,25 +14,24 @@ import HomeScreen from './screens/HomeScreen';
 import { TodosContextProvider } from './context/TodoContext';
 import UsersScreen from './screens/UsersScreen';
 import SearchScreen from './screens/SearchScreen';
-// import FormScreen from './screens/FormScreen';
 // import ChangePassword from './screens/Auth/ChangePassword';
 // import Signup from './screens/Auth/Signup';
 // import Login from './screens/Auth/Login';
 // import axios from 'axios';
-// import { useEffect } from 'react';
-// import QuestionsScreen from './screens/QuestionsScreen';
-// import { fetchQuestions } from './store/Slices/questionsSlice';
-// import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import QuestionsScreen from './screens/QuestionsScreen';
+import { fetchQuestions } from './store/Slices/questionsSlice';
+import { useDispatch } from 'react-redux';
+import FormScreen from './screens/FormScreen';
 
 const App = () => {
   // const { pathname } = useLocation();
   // console.log(pathname);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // console.log(window.location.href);
-  // useEffect(() => {
-  //   dispatch(fetchQuestions());
-  // }, []);
+  useEffect(() => {
+    dispatch(fetchQuestions());
+  }, []);
 
   // useEffect(() => {
   //   axios.defaults.baseURL = 'http://localhost:1337';
@@ -84,13 +83,15 @@ const App = () => {
             </TodosContextProvider>
           }
         /> */}
-        {/* <Route path='/questions' element={<QuestionsScreen />} />
+        {/* 
         <Route path='/auth/register' element={<Signup />} />
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/change-password' element={<ChangePassword />} />
-        <Route path='/form' element={<FormScreen />} /> */}
+        */}
         <Route path='/' element={<UsersScreen />} />
         <Route path='/search' element={<SearchScreen />} />
+        <Route path='/questions' element={<QuestionsScreen />} />
+        <Route path='/form' element={<FormScreen />} />
 
         {/* <Route path='/' element={<Home />} /> */}
         {/* <Route path='/' element={<CreateArtScreen />} /> */}

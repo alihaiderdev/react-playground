@@ -1,9 +1,45 @@
 import React, { useState } from 'react';
 import Input from '../components/Input';
-import { countries, toppings } from '../data';
+import { countries } from '../data';
 
 const genders = ['Male', 'Female', 'Other'];
-const courses = ['Python', 'Javascript', 'HTML5', 'CSS3', 'Bootstrap'];
+
+const Checkbox = ({ id, item, handleClick, isChecked }) => {
+  return (
+    <li>
+      <input
+        id={id}
+        key={id}
+        name={item.name}
+        type='checkbox'
+        onChange={handleClick}
+        checked={isChecked}
+        className='mr-2'
+      />
+      <label htmlFor={`${id}`} className='hover'>
+        {item.name} - {getFormattedPrice(item.price)}
+      </label>
+    </li>
+  );
+};
+
+const optionsGenerator = (array, filters) => {
+  return (
+    array?.length > 0 &&
+    array?.map((item, index) => {
+      return (
+        <Checkbox
+          key={index}
+          type='checkbox'
+          item={item}
+          id={item.name}
+          isChecked={item?.isChecked || false}
+          handleClick={filters}
+        />
+      );
+    })
+  );
+};
 
 const getFormattedPrice = (price) => `$${price.toFixed(2)}`;
 
@@ -15,19 +51,49 @@ const FormScreen = () => {
     gender: genders[0],
     country: countries[0],
   });
-  const [checkedState, setCheckedState] = useState(
-    new Array(toppings.length).fill(false)
-  );
-  const [selectedToppings, setSelectedToppings] = useState([]);
+  let [toppings, setToppings] = useState([
+    {
+      name: 'Capsicum',
+      price: 1.2,
+    },
+    {
+      name: 'Paneer',
+      price: 2.0,
+    },
+    {
+      name: 'Red Paprika',
+      price: 2.5,
+    },
+    {
+      name: 'Onions',
+      price: 3.0,
+    },
+    {
+      name: 'Extra Cheese',
+      price: 3.5,
+    },
+    {
+      name: 'Baby Corns',
+      price: 3.0,
+    },
+    {
+      name: 'Mushroom',
+      price: 2.0,
+    },
+  ]);
 
+  let [selectedToppings, setSelectedToppings] = useState([]);
   const [total, setTotal] = useState(0);
-
+  const [showTotal, setShowTotal] = useState(true);
   const { name, email, password, gender, country } = data;
 
   const submitHandler = (e) => {
     e.preventDefault();
     // on click submit button do whatever you want send data to api or something else here i am just simply log it
     // for this trick you must set same name in in input name attribute as your state name otherwise this shorthand trick is not work as expected
+    selectedToppings = toppings?.filter((o) => o?.isChecked);
+    setSelectedToppings(selectedToppings);
+
     console.log({
       name,
       email,
@@ -35,7 +101,6 @@ const FormScreen = () => {
       gender,
       country,
       total,
-      checkedState,
       selectedToppings,
     });
   };
@@ -48,26 +113,19 @@ const FormScreen = () => {
     setData({ ...data, [name]: value });
   };
 
-  const onCheckboxValueChangeHandler = (position, name, price) => {
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === position ? !item : item
-    );
-    setCheckedState(updatedCheckedState);
-    const totalPrice = updatedCheckedState.reduce(
-      (sum, currentState, index) => {
-        if (currentState === true) {
-          return sum + toppings[index].price;
-        }
-        return sum;
-      },
-      0
-    );
-    setTotal(totalPrice);
-
-    selectedToppings = checkedState.filter((c) => c === true);
-
-    setSelectedToppings(selectedToppings);
-  };
+  async function checked(e) {
+    const { name, checked } = e.target;
+    toppings = toppings.map((item) => {
+      if (item.name === name) {
+        setTotal((prev) => prev + item?.price);
+        return { ...item, isChecked: checked };
+      } else {
+        return item;
+      }
+    });
+    setToppings(toppings);
+  }
+  const toppingOptions = optionsGenerator(toppings, checked);
 
   return (
     <div className='container mx-auto px-4'>
@@ -174,7 +232,6 @@ const FormScreen = () => {
         <span className='p-4' onChange={onValueChangeHandler}>
           {genders?.length > 0 &&
             genders?.map((_gender, index) => {
-              console.log(gender === _gender, gender, _gender);
               return (
                 <span className='mr-5' key={index}>
                   <input
@@ -191,43 +248,33 @@ const FormScreen = () => {
             })}
         </span>
 
-        <ul className='py-3'>
-          {toppings?.length > 0 &&
-            toppings.map(({ name, price }, index) => {
-              return (
-                <li key={index}>
-                  <input
-                    type='checkbox'
-                    id={`checkbox-${index}`}
-                    className='accent-indigo-600'
-                    name={name}
-                    value={name}
-                    checked={checkedState[index]}
-                    onChange={() =>
-                      onCheckboxValueChangeHandler(index, name, price)
-                    }
-                  />
-                  <label className='px-3' htmlFor={`checkbox-${index}`}>
-                    {name}
-                  </label>
-                  <span className=''>{getFormattedPrice(price)}</span>
-                </li>
-              );
-            })}
-          <li className='pt-3'>
+        <ul>{toppingOptions}</ul>
+        <label>
+          <input
+            type='checkbox'
+            defaultChecked={showTotal}
+            onChange={() => setShowTotal(!showTotal)}
+            className='mr-2'
+          />
+          {!showTotal ? 'Show' : 'Hide'} total
+        </label>
+        {showTotal && (
+          <h4 className='pt-3'>
             <span>Total: </span>
             <span className='text-indigo-600 font-black'>
               {getFormattedPrice(total)}
             </span>
-          </li>
-        </ul>
+          </h4>
+        )}
 
-        <button
-          type='submit'
-          className='bg-indigo-600 p-3 text-white rounded-md'
-        >
-          Submit
-        </button>
+        <div>
+          <button
+            type='submit'
+            className='bg-indigo-600 p-3 text-white rounded-md'
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );

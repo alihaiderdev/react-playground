@@ -9,7 +9,7 @@ const initialState = {
 
 // Generates pending, fulfilled and rejected action types
 export const fetchQuestions = createAsyncThunk('user/fetchQuestions', () => {
-  const token = '192|v1Y5XF85EaJfT1sWAbbwpJLhYdfaZFYVS39hiNnO';
+  const token = '193|W8j11g6jKOLr6sGyGHSOuEEwZiLekA935CRfQJEW';
   return axios('http://172.105.60.26/api/v1/questions', {
     headers: {
       Authorization: `Bearer ${token}`,
