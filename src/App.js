@@ -1,28 +1,20 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  NavLink,
-  useLocation,
-} from 'react-router-dom';
-import HomeScreen from './screens/HomeScreen';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 // import ArtScreen from './screens/CreateArtScreen';
 // import ArtsScreen from './screens/ArtsScreen';
 // import CreateArtScreen from './screens/CreateArtScreen';
 // import Art from './screens/Art';
 // import Home from './screens/Home';
-import { TodosContextProvider } from './context/TodoContext';
-import UsersScreen from './screens/UsersScreen';
-import SearchScreen from './screens/SearchScreen';
+import SearchScreen from "./screens/SearchScreen";
+import UsersScreen from "./screens/UsersScreen";
 // import ChangePassword from './screens/Auth/ChangePassword';
 // import Signup from './screens/Auth/Signup';
 // import Login from './screens/Auth/Login';
 // import axios from 'axios';
-import { useEffect } from 'react';
-import QuestionsScreen from './screens/QuestionsScreen';
-import { fetchQuestions } from './store/Slices/questionsSlice';
-import { useDispatch } from 'react-redux';
-import FormScreen from './screens/FormScreen';
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import QuestionsScreen from "./screens/QuestionsScreen";
+import StrapiCrud from "./screens/StrapiCrud";
+import { fetchQuestions } from "./store/Slices/questionsSlice";
 
 const App = () => {
   // const { pathname } = useLocation();
@@ -88,10 +80,11 @@ const App = () => {
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/change-password' element={<ChangePassword />} />
         */}
-        <Route path='/' element={<UsersScreen />} />
-        <Route path='/search' element={<SearchScreen />} />
-        <Route path='/questions' element={<QuestionsScreen />} />
-        <Route path='/form' element={<FormScreen />} />
+        <Route path="/" element={<UsersScreen />} />
+        <Route path="/search" element={<SearchScreen />} />
+        <Route path="/questions" element={<QuestionsScreen />} />
+        {/* <Route path="/form" element={<FormScreen />} /> */}
+        <Route path="/strapi" element={<StrapiCrud />} />
 
         {/* <Route path='/' element={<Home />} /> */}
         {/* <Route path='/' element={<CreateArtScreen />} /> */}
