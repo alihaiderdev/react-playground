@@ -1,4 +1,3 @@
-// import { Button, Stack } from "react-bootstrap";
 import { useShoppingCart } from "../context/CartContext";
 import products from "../products.json";
 import { formatCurrency } from "../utilities";
