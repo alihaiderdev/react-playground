@@ -3,7 +3,6 @@ import products from "../products.json";
 
 const ids = { categories: [1, 2, 3, 4, 5], users: [1, 2, 3, 4] };
 const { categories, users } = ids;
-console.log(process.env.REACT_APP_STRAPI_TOKEN);
 const TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjYzOTM2MTA5LCJleHAiOjE2NjQwMjI1MDl9.INMpP217dBhSOitvvcCGNoNu4xsMaFzI_VPdZSnVTmY";
 

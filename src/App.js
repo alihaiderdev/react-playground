@@ -12,6 +12,8 @@ import UsersScreen from "./screens/UsersScreen";
 // import axios from 'axios';
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import Layout from "./components/Layout";
+import Products from "./screens/Products";
 import QuestionsScreen from "./screens/QuestionsScreen";
 import StrapiCrud from "./screens/StrapiCrud";
 import { fetchQuestions } from "./store/Slices/questionsSlice";
@@ -66,8 +68,10 @@ const App = () => {
           </li>
         </ul>
       </nav> */}
-      <Routes>
-        {/* <Route
+
+      <Layout>
+        <Routes>
+          {/* <Route
           path='/'
           element={
             <TodosContextProvider>
@@ -75,24 +79,26 @@ const App = () => {
             </TodosContextProvider>
           }
         /> */}
-        {/* 
+          {/* 
         <Route path='/auth/register' element={<Signup />} />
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/change-password' element={<ChangePassword />} />
         */}
-        <Route path="/" element={<UsersScreen />} />
-        <Route path="/search" element={<SearchScreen />} />
-        <Route path="/questions" element={<QuestionsScreen />} />
-        {/* <Route path="/form" element={<FormScreen />} /> */}
-        <Route path="/strapi" element={<StrapiCrud />} />
+          <Route path="/" element={<UsersScreen />} />
+          <Route path="/search" element={<SearchScreen />} />
+          <Route path="/questions" element={<QuestionsScreen />} />
+          {/* <Route path="/form" element={<FormScreen />} /> */}
+          <Route path="/strapi" element={<StrapiCrud />} />
+          <Route path="/products" element={<Products />} />
 
-        {/* <Route path='/' element={<Home />} /> */}
-        {/* <Route path='/' element={<CreateArtScreen />} /> */}
-        {/* <Route path='/arts' element={<ArtsScreen />} />
+          {/* <Route path='/' element={<Home />} /> */}
+          {/* <Route path='/' element={<CreateArtScreen />} /> */}
+          {/* <Route path='/arts' element={<ArtsScreen />} />
         {/* <Route path='/art' element={<Art />} /> */}
-        {/* <Route path='/arts/:artId' element={<ArtScreen />} />
-         */}
-      </Routes>
+          {/* <Route path='/arts/:artId' element={<ArtScreen />} />
+           */}
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 };
