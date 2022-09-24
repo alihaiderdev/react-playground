@@ -53,6 +53,11 @@ export const ShoppingCartProvider = ({ children }) => {
     });
   };
 
+  const clearCart = () => {
+    localStorage.clear();
+    setCartItems([]);
+  };
+
   return (
     <ShoppingCartContext.Provider
       value={{
@@ -60,6 +65,7 @@ export const ShoppingCartProvider = ({ children }) => {
         increaseCartQuantity,
         decreaseCartQuantity,
         removeFromCart,
+        clearCart,
         openCart,
         closeCart,
         cartItems,

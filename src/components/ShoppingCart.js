@@ -5,7 +5,7 @@ import { formatCurrency } from "../utilities";
 import CartItem from "./CartItem";
 
 export function ShoppingCart({ isOpen }) {
-  const { closeCart, cartItems, cartQuantity } = useShoppingCart();
+  const { closeCart, cartItems, cartQuantity, clearCart } = useShoppingCart();
 
   //   useEffect(() => {
   //     if (cartItems?.length === 0) {
@@ -33,14 +33,22 @@ export function ShoppingCart({ isOpen }) {
           {cartItems.map((item, index) => (
             <CartItem key={index} {...item} />
           ))}
-          <div className="font-black text-indigo-500 text-xl">
-            Total{" "}
-            {formatCurrency(
-              cartItems.reduce((total, cartItem) => {
-                const item = products.find((i) => i.id === cartItem.id);
-                return total + (item?.price || 0) * cartItem.quantity;
-              }, 0)
-            )}
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-indigo-500 text-xl">
+              Total{" "}
+              {formatCurrency(
+                cartItems.reduce((total, cartItem) => {
+                  const item = products.find((i) => i.id === cartItem.id);
+                  return total + (item?.price || 0) * cartItem.quantity;
+                }, 0)
+              )}
+            </span>
+            <button
+              className="font-semibold bg-red-600 text-white px-3 py-1 rounded-md text-lg"
+              onClick={() => clearCart()}
+            >
+              Clear Cart
+            </button>
           </div>
         </>
       ) : (
