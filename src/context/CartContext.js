@@ -41,7 +41,7 @@ export const ShoppingCartProvider = ({ children }) => {
         return currentItems.filter((item) => item.id !== id);
       } else {
         return currentItems.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
         );
       }
     });
@@ -54,7 +54,7 @@ export const ShoppingCartProvider = ({ children }) => {
   };
 
   const clearCart = () => {
-    localStorage.clear();
+    localStorage.removeItem("cart");
     setCartItems([]);
   };
 

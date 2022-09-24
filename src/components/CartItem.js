@@ -15,7 +15,11 @@ const CartItem = ({ id, quantity }) => {
         <img src={item.image} className="object-cover h-40" />
       </div>
       <div className="col-span-4 my-auto">
-        <IncreaseDecreaseAndRemoveButtons id={id} quantity={quantity} />
+        <IncreaseDecreaseAndRemoveButtons
+          id={id}
+          qty={quantity}
+          quantity={item.quantity}
+        />
       </div>
       <div className="col-span-1 my-auto">{formatCurrency(item.price)}</div>
       <div className="col-span-1 my-auto">

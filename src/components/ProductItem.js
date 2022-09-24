@@ -1,15 +1,12 @@
 import { useShoppingCart } from "../context/CartContext";
 import IncreaseDecreaseAndRemoveButtons from "./IncreaseDecreaseAndRemoveButtons";
 
-const ProductItem = ({ product: { id, title, price, image, description } }) => {
-  const {
-    getItemQuantity,
-    increaseCartQuantity,
-    decreaseCartQuantity,
-    removeFromCart,
-  } = useShoppingCart();
+const ProductItem = ({
+  product: { id, title, price, image, description, quantity },
+}) => {
+  const { getItemQuantity, increaseCartQuantity } = useShoppingCart();
 
-  const quantity = getItemQuantity(id);
+  const qty = getItemQuantity(id);
 
   return (
     <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
@@ -28,8 +25,11 @@ const ProductItem = ({ product: { id, title, price, image, description } }) => {
           <li className="text-md font-black text-indigo-600">
             Price: ${price}
           </li>
+          <li className="text-md font-black text-indigo-600">
+            Quantity: ${quantity}
+          </li>
           {/* <li>Qty: {product.quantity}</li> */}
-          {quantity === 0 ? (
+          {qty === 0 ? (
             <button
               onClick={() => increaseCartQuantity(id)}
               className="capitalize bg-indigo-600 text-white font-semibold px-2 py-1 rounded-sm"
@@ -37,7 +37,11 @@ const ProductItem = ({ product: { id, title, price, image, description } }) => {
               + Add to cart
             </button>
           ) : (
-            <IncreaseDecreaseAndRemoveButtons id={id} quantity={quantity} />
+            <IncreaseDecreaseAndRemoveButtons
+              id={id}
+              qty={qty}
+              quantity={quantity}
+            />
           )}
         </ul>
         <p className="mt-1">${description}</p>
