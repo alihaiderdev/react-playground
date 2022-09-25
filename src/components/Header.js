@@ -36,8 +36,21 @@ const Header = () => {
             Products
           </Link>
         </nav>
-        <Link to={`/signup`}>Signup</Link>
-        <button>Login</button>
+        <Link
+          to={`/auth/register`}
+          className="px-4 py-2 font-semibold rounded bg-indigo-600 text-white hover:text-white"
+        >
+          Register
+        </Link>
+        <Link
+          to={`/auth/login`}
+          className="mx-6 px-4 py-2 font-semibold rounded bg-indigo-600 text-white hover:text-white"
+        >
+          Login
+        </Link>
+        {/* <button className="mx-6 px-4 py-2 font-semibold rounded bg-indigo-600 text-white">
+          Login
+        </button> */}
         {cartQuantity ? (
           <button
             onClick={openCart}

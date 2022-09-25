@@ -30,60 +30,64 @@ const Product = () => {
   return (
     <section className="grid grid-cols-12 gap-6">
       {!isLoading && error && (
-        <h1 className="text-indigo-600 font-bold text-3xl">{error}</h1>
+        <div className="col-span-12 text-center">
+          <h1 className="text-indigo-600 font-bold text-3xl">{error}</h1>
+        </div>
       )}
       {isLoading ? (
         <h1 className="text-indigo-600 font-bold text-3xl">Loading...</h1>
       ) : (
-        <>
-          <div className="col-span-12 md:col-span-6">
-            <span className="block relative rounded overflow-hidden">
-              <img
-                alt={attributes?.title}
-                className="object-cover object-center w-full h-full block"
-                src={imageUrlFormatter(
-                  attributes?.image?.data?.attributes?.url
-                )}
-                onError={({ currentTarget }) =>
-                  imageErrorHandler(currentTarget)
-                }
+        !error && (
+          <>
+            <div className="col-span-12 md:col-span-6">
+              <span className="block relative rounded overflow-hidden">
+                <img
+                  alt={attributes?.title}
+                  className="object-cover object-center w-full h-full block"
+                  src={imageUrlFormatter(
+                    attributes?.image?.data?.attributes?.url
+                  )}
+                  onError={({ currentTarget }) =>
+                    imageErrorHandler(currentTarget)
+                  }
+                />
+              </span>
+            </div>
+            <div className="col-span-12 md:col-span-6">
+              <h1 className="text-indigo-600 font-bold text-3xl">
+                {attributes?.title}
+              </h1>
+              <Rate
+                tooltips={description}
+                className="text-indigo-600 pt-4"
+                allowHalf
+                disabled
+                defaultValue={attributes?.averageRating}
               />
-            </span>
-          </div>
-          <div className="col-span-12 md:col-span-6">
-            <h1 className="text-indigo-600 font-bold text-3xl">
-              {attributes?.title}
-            </h1>
-            <Rate
-              tooltips={description}
-              className="text-indigo-600 pt-4"
-              allowHalf
-              disabled
-              defaultValue={attributes?.averageRating}
-            />
-            <p
-              className="py-4"
-              dangerouslySetInnerHTML={{ __html: attributes?.description }}
-            ></p>
-            <ul className="text-indigo-600 text-xl">
-              <li className="pb-2">
-                Quantity:{" "}
-                <span className="font-black">{attributes?.quantity}</span>
-              </li>
-              <li className="pb-2">
-                Price:{" "}
-                <span className="font-black">
-                  {convertToUSD(attributes?.price)}
-                </span>
-              </li>
-            </ul>
-            <IncreaseDecreaseAndRemoveButtons
-              id={id}
-              qty={qty}
-              quantity={attributes?.quantity}
-            />
-          </div>
-        </>
+              <p
+                className="py-4"
+                dangerouslySetInnerHTML={{ __html: attributes?.description }}
+              ></p>
+              <ul className="text-indigo-600 text-xl">
+                <li className="pb-2">
+                  Quantity:{" "}
+                  <span className="font-black">{attributes?.quantity}</span>
+                </li>
+                <li className="pb-2">
+                  Price:{" "}
+                  <span className="font-black">
+                    {convertToUSD(attributes?.price)}
+                  </span>
+                </li>
+              </ul>
+              <IncreaseDecreaseAndRemoveButtons
+                id={id}
+                qty={qty}
+                quantity={attributes?.quantity}
+              />
+            </div>
+          </>
+        )
       )}
     </section>
   );
