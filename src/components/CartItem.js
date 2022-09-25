@@ -12,7 +12,7 @@ const CartItem = ({ id, quantity }) => {
   const { removeFromCart } = useShoppingCart();
   const { products } = useSelector((state) => state.product);
 
-  const item = products.find((product) => product.id === id)?.attributes;
+  const item = products?.find((product) => product.id === id)?.attributes;
   if (item == null) return null;
 
   return (

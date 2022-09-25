@@ -1,9 +1,9 @@
 // import { faker } from "@faker-js/faker";
 import React, { memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import LoadingSkeleton from "../components/LoadingSkeleton";
 import ProductItem from "../components/ProductItem";
 import { fetchProducts } from "../store/Slices/productSlice";
-import LoadingSkeleton from "./LoadingSkeleton";
 
 // const ids = { categories: [1, 2, 3, 4, 5], users: [1, 2, 3, 4] };
 // const { categories, users } = ids;

@@ -33,7 +33,10 @@ const productSlice = createSlice({
     });
     builder.addCase(fetchProducts.fulfilled, (state, { type, payload }) => {
       state.isLoading = false;
-      state.products = payload.products;
+      state.products =
+        state.products?.length > 0
+          ? [...state.products, ...payload.products]
+          : payload.products;
       state.meta = payload.meta;
     });
     builder.addCase(fetchProducts.rejected, (state, { type, payload }) => {

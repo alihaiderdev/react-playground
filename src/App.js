@@ -8,37 +8,36 @@ import SearchScreen from "./screens/SearchScreen";
 import UsersScreen from "./screens/UsersScreen";
 // import ChangePassword from './screens/Auth/ChangePassword';
 import axios from "axios";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./screens/Auth/Login";
 import Signup from "./screens/Auth/Signup";
+import Dashboard from "./screens/Dashboard";
 import PageNotFound from "./screens/PageNotFound";
 import Product from "./screens/Product";
 import Products from "./screens/Products";
 import QuestionsScreen from "./screens/QuestionsScreen";
 import StrapiCrud from "./screens/StrapiCrud";
-import { fetchQuestions } from "./store/Slices/questionsSlice";
 
 const App = () => {
   // const { pathname } = useLocation();
   // console.log(pathname);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchQuestions());
-  }, []);
+  // const dispatch = useDispatch();
 
   // useEffect(() => {
-  //   axios.defaults.baseURL = 'http://localhost:1337';
-  //   axios.defaults.headers.post['Content-Type'] = 'application/json';
-  //   const jwtToken = localStorage.getItem('jwt');
+  //   dispatch(fetchQuestions());
+  // }, []);
+
+  // useEffect(() => {
+  //   const jwtToken = localStorage.getItem("jwt");
   //   if (jwtToken) {
-  //     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+  //     axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
   //   }
-  // }, [localStorage.getItem('jwt')]);
+  // }, [localStorage.getItem("jwt")]);
+
   axios.defaults.baseURL =
     process.env.REACT_APP_SERVER_URL || "http://localhost:1337";
+  axios.defaults.headers.post["Content-Type"] = "application/json";
   return (
     <BrowserRouter>
       {/* <nav className='header'>
@@ -98,6 +97,10 @@ const App = () => {
           <Route path="/questions" element={<QuestionsScreen />} />
           <Route path="/strapi" element={<StrapiCrud />} />
           <Route path="/products" element={<Products />} />
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute Component={Dashboard} />}
+          />
           <Route path="/products/:id" element={<Product />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

@@ -19,7 +19,6 @@ const Product = () => {
     isLoading,
     error,
     data: { id, attributes },
-    meta,
   } = useFetchData(
     `/api/products/${productId}?populate=user,image,reviews.user`
   );

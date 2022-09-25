@@ -46,7 +46,7 @@ export function ShoppingCart({ isOpen }) {
               Total{" "}
               {convertToUSD(
                 cartItems.reduce((total, cartItem) => {
-                  const item = products.find(
+                  const item = products?.find(
                     (i) => i.id === cartItem.id
                   )?.attributes;
                   return total + (item?.price || 0) * cartItem.quantity;

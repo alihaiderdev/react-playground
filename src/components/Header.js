@@ -1,15 +1,40 @@
+import { Dropdown, Menu, Space } from "antd";
+import { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useShoppingCart } from "../context/CartContext";
+import { authActions } from "../store/Slices/authSlice";
 
 const Header = () => {
   const { openCart, cartQuantity } = useShoppingCart();
-  // <Route path="/" element={<UsersScreen />} />
-  // <Route path="/search" element={<SearchScreen />} />
-  // <Route path="/questions" element={<QuestionsScreen />} />
-  // {/* <Route path="/form" element={<FormScreen />} /> */}
-  // <Route path="/strapi" element={<StrapiCrud />} />
-  // <Route path="/products" element={<Products />} />
-  // <Route path="/products/:id" element={<Product />} />
+  const { user: auth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  const [user, _] = useState(JSON.parse(localStorage.getItem("user")));
+  console.log({ user });
+
+  const menu = useMemo(
+    () => (
+      <Menu
+        items={[
+          {
+            label: <Link to="/dashboard">Dashboard</Link>,
+            key: "0",
+          },
+          {
+            type: "divider",
+          },
+          {
+            label: (
+              <span onClick={() => dispatch(authActions.logout())}>Logout</span>
+            ),
+            key: "2",
+          },
+        ]}
+      />
+    ),
+    []
+  );
   return (
     <header className="text-gray-600 body-font">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
@@ -36,18 +61,37 @@ const Header = () => {
             Products
           </Link>
         </nav>
-        <Link
-          to={`/auth/register`}
-          className="px-4 py-2 font-semibold rounded bg-indigo-600 text-white hover:text-white"
-        >
-          Register
-        </Link>
-        <Link
-          to={`/auth/login`}
-          className="mx-6 px-4 py-2 font-semibold rounded bg-indigo-600 text-white hover:text-white"
-        >
-          Login
-        </Link>
+
+        {Object.keys(user || {})?.length > 0 ? (
+          <Dropdown
+            overlay={menu}
+            trigger={["click"]}
+            placement="bottomLeft"
+            className="mx-6"
+          >
+            <a onClick={(e) => e.preventDefault()}>
+              <Space className="capitalize text-indigo-600">
+                {user?.user.username}
+              </Space>
+            </a>
+          </Dropdown>
+        ) : (
+          <>
+            <Link
+              to={`/auth/register`}
+              className="px-4 py-2 font-semibold rounded bg-indigo-600 text-white hover:text-white"
+            >
+              Register
+            </Link>
+            <Link
+              to={`/auth/login`}
+              className="mx-6 px-4 py-2 font-semibold rounded bg-indigo-600 text-white hover:text-white"
+            >
+              Login
+            </Link>
+          </>
+        )}
+
         {/* <button className="mx-6 px-4 py-2 font-semibold rounded bg-indigo-600 text-white">
           Login
         </button> */}

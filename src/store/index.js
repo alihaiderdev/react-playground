@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./Slices/authSlice";
 // import reduxLogger from 'redux-logger';
 // import cakeReducer from './Slices/cakeSlice';
 // import iceCreamReducer from './Slices/iceCreamSlice';
@@ -14,6 +15,7 @@ const store = configureStore({
     // iceCream: iceCreamReducer,
     user: userReducer,
     product: productReducer,
+    auth: authReducer,
     // questions: questionsReducer,
   },
   //   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
