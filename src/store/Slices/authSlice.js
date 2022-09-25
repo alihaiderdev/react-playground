@@ -16,15 +16,27 @@ const initialState = {
   error: "",
 };
 
-export const fetchUser = createAsyncThunk(
-  "auth/fetchUser",
-  ({ url, userInfo }) => {
-    return axios(url, {
+export const login = createAsyncThunk("auth/login", ({ url, userInfo }) => {
+  return axios(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    data: JSON.stringify(userInfo),
+  })
+    .then(({ data }) => {
+      return data;
+    })
+    .catch((error) => error.message);
+});
+
+export const fetchLoggedInUserDetails = createAsyncThunk(
+  "auth/fetchLoggedInUserDetails",
+  () => {
+    return axios(`/api/users/1?populate=shippingAddress, billingAddress`, {
       headers: {
         "Content-Type": "application/json",
       },
-      method: "POST",
-      data: JSON.stringify(userInfo),
     })
       .then(({ data }) => {
         return data;
@@ -40,16 +52,15 @@ const authSlice = createSlice({
     logout: (state, action) => {
       state.user = {};
       localStorage.removeItem("user");
+      localStorage.removeItem("random");
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUser.pending, (state) => {
+    builder.addCase(login.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(fetchUser.fulfilled, (state, { type, payload }) => {
+    builder.addCase(login.fulfilled, (state, { type, payload }) => {
       state.isLoading = false;
-      console.log(payload);
-
       if (typeof payload !== "object") {
         error("Invalid identifier or password");
         return;
@@ -57,14 +68,44 @@ const authSlice = createSlice({
       if ("jwt" in payload) {
         state.user = payload;
         localStorage.setItem("user", JSON.stringify(payload));
+        localStorage.setItem("random", Math.random());
+        // fetchLoggedInUserDetails()
         success("Successfully Login");
       }
     });
-    // builder.addCase(fetchUser.rejected, (state, { type, payload }) => {
+
+    // builder.addCase(login.rejected, (state, { type, payload }) => {
     //   state.isLoading = false;
     //   state.error = payload;
     //   error(payload);
     // });
+
+    builder.addCase(fetchLoggedInUserDetails.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      fetchLoggedInUserDetails.fulfilled,
+      (state, { type, payload }) => {
+        state.isLoading = false;
+        const user = JSON.parse(localStorage.getItem("user"));
+        state.user = {
+          jwt: user.jwt,
+          user: {
+            ...user.user,
+            billingAddress: payload.billingAddress,
+            shippingAddress: payload.shippingAddress,
+          },
+        };
+        localStorage.setItem("user", JSON.stringify(state.user));
+      }
+    );
+    builder.addCase(
+      fetchLoggedInUserDetails.rejected,
+      (state, { type, payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      }
+    );
   },
 });
 

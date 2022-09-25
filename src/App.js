@@ -8,6 +8,7 @@ import SearchScreen from "./screens/SearchScreen";
 import UsersScreen from "./screens/UsersScreen";
 // import ChangePassword from './screens/Auth/ChangePassword';
 import axios from "axios";
+import { useEffect } from "react";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./screens/Auth/Login";
@@ -24,9 +25,7 @@ const App = () => {
   // console.log(pathname);
   // const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(fetchQuestions());
-  // }, []);
+  useEffect(() => {}, [localStorage.getItem("random")]);
 
   // useEffect(() => {
   //   const jwtToken = localStorage.getItem("jwt");
@@ -38,6 +37,7 @@ const App = () => {
   axios.defaults.baseURL =
     process.env.REACT_APP_SERVER_URL || "http://localhost:1337";
   axios.defaults.headers.post["Content-Type"] = "application/json";
+
   return (
     <BrowserRouter>
       {/* <nav className='header'>

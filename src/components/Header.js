@@ -9,9 +9,7 @@ const Header = () => {
   const { openCart, cartQuantity } = useShoppingCart();
   const { user: auth } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
-  const [user, _] = useState(JSON.parse(localStorage.getItem("user")));
-  console.log({ user });
+  const [user] = useState(JSON.parse(localStorage.getItem("user")));
 
   const menu = useMemo(
     () => (

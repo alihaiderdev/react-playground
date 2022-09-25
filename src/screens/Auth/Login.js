@@ -3,10 +3,13 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AuthFormsLayout from "../../components/AuthFormsLayout";
 import Input from "../../components/Input";
-import { fetchUser } from "../../store/Slices/authSlice";
+import {
+  fetchLoggedInUserDetails,
+  login as signin,
+} from "../../store/Slices/authSlice";
 
 const Login = () => {
-  const [user, _] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user] = useState(JSON.parse(localStorage.getItem("user")));
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,15 +20,16 @@ const Login = () => {
 
   useEffect(() => {
     if (Object.keys(user || {}).length > 0) {
+      dispatch(fetchLoggedInUserDetails());
       return navigate("/products");
     }
-  }, [user]);
+  }, [Object.keys(user || {}).length]);
 
   const { identifier, password } = login;
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(fetchUser({ userInfo: login, url: `/api/auth/local` }));
+    dispatch(signin({ userInfo: login, url: `/api/auth/local` }));
   };
 
   const onValueChangeHandler = ({ target: { name, value } }) => {
