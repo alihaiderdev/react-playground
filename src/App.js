@@ -10,9 +10,11 @@ import UsersScreen from "./screens/UsersScreen";
 // import Signup from './screens/Auth/Signup';
 // import Login from './screens/Auth/Login';
 // import axios from 'axios';
+import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "./components/Layout";
+import Product from "./screens/Product";
 import Products from "./screens/Products";
 import QuestionsScreen from "./screens/QuestionsScreen";
 import StrapiCrud from "./screens/StrapiCrud";
@@ -35,7 +37,8 @@ const App = () => {
   //     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
   //   }
   // }, [localStorage.getItem('jwt')]);
-
+  axios.defaults.baseURL =
+    process.env.REACT_APP_SERVER_URL || "http://localhost:1337";
   return (
     <BrowserRouter>
       {/* <nav className='header'>
@@ -90,6 +93,7 @@ const App = () => {
           {/* <Route path="/form" element={<FormScreen />} /> */}
           <Route path="/strapi" element={<StrapiCrud />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<Product />} />
 
           {/* <Route path='/' element={<Home />} /> */}
           {/* <Route path='/' element={<CreateArtScreen />} /> */}

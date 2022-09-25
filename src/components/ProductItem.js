@@ -1,4 +1,10 @@
+import { Link } from "react-router-dom";
 import { useShoppingCart } from "../context/CartContext";
+import {
+  convertToUSD,
+  imageErrorHandler,
+  imageUrlFormatter,
+} from "../utilities";
 import IncreaseDecreaseAndRemoveButtons from "./IncreaseDecreaseAndRemoveButtons";
 
 const ProductItem = ({
@@ -10,25 +16,27 @@ const ProductItem = ({
 
   return (
     <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-      <a className="block relative h-48 rounded overflow-hidden">
-        <img
-          alt={title}
-          className="object-cover object-center w-full h-full block"
-          src={image}
-        />
-      </a>
+      <Link to={`/products/${id}`}>
+        <span className="block relative h-48 rounded overflow-hidden">
+          <img
+            alt={title}
+            className="object-cover object-center w-full h-full block"
+            src={imageUrlFormatter(image?.data?.attributes?.url)}
+            onError={({ currentTarget }) => imageErrorHandler(currentTarget)}
+          />
+        </span>
+      </Link>
       <div className="mt-4">
         <h2 className="text-gray-900 title-font text-lg font-medium">
           {title}
         </h2>
         <ul className="flex justify-between items-center">
           <li className="text-md font-black text-indigo-600">
-            Price: ${price}
+            Price: {convertToUSD(price)}
           </li>
           <li className="text-md font-black text-indigo-600">
-            Quantity: ${quantity}
+            Quantity: {quantity}
           </li>
-          {/* <li>Qty: {product.quantity}</li> */}
           {qty === 0 ? (
             <button
               onClick={() => increaseCartQuantity(id)}
@@ -44,7 +52,7 @@ const ProductItem = ({
             />
           )}
         </ul>
-        <p className="mt-1">${description}</p>
+        {/* <p className="mt-1">{description}</p> */}
       </div>
     </div>
   );
