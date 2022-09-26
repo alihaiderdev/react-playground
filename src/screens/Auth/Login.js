@@ -1,45 +1,65 @@
-import axios from 'axios';
-import React from 'react';
-import { useState } from 'react';
-import AuthFormsLayout from '../../components/AuthFormsLayout';
-import Input from '../../components/Input';
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import AuthFormsLayout from "../../components/AuthFormsLayout";
+import Input from "../../components/Input";
+import {
+  fetchLoggedInUserDetails,
+  login as signin,
+} from "../../store/Slices/authSlice";
 
 const Login = () => {
+  const [user] = useState(JSON.parse(localStorage.getItem("user")));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [login, setLogin] = useState({
-    identifier: '',
-    password: '',
+    identifier: "",
+    password: "",
   });
+
+  useEffect(() => {
+    if (Object.keys(user || {}).length > 0) {
+      dispatch(fetchLoggedInUserDetails());
+      return navigate("/products");
+    }
+  }, [Object.keys(user || {}).length]);
 
   const { identifier, password } = login;
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log({ login });
-    const { data } = await axios({
-      url: '/api/auth/local',
-      method: 'POST',
-      data: JSON.stringify(login),
-    });
-    console.log({ data });
+    dispatch(signin({ userInfo: login, url: `/api/auth/local` }));
   };
+
   const onValueChangeHandler = ({ target: { name, value } }) => {
     setLogin({ ...login, [name]: value });
   };
 
   return (
-    <AuthFormsLayout title={'Login'} submitHandler={submitHandler}>
-      <Input
-        type={'text'}
-        name={'identifier'}
-        value={identifier}
-        handler={onValueChangeHandler}
-      />
-      <Input
-        type={'password'}
-        name={'password'}
-        value={password}
-        handler={onValueChangeHandler}
-      />
+    <AuthFormsLayout title={"Login"} submitHandler={submitHandler}>
+      <form onSubmit={submitHandler} autoComplete="off" autoCapitalize="off">
+        <Input
+          type={"text"}
+          name={"identifier"}
+          value={identifier}
+          handler={onValueChangeHandler}
+        />
+        <Input
+          type={"password"}
+          name={"password"}
+          value={password}
+          handler={onValueChangeHandler}
+        />
+        <div>
+          <button
+            type="submit"
+            className="bg-indigo-600 py-3 px-8 text-white rounded-md ml-auto block"
+          >
+            Login
+          </button>
+        </div>
+      </form>
     </AuthFormsLayout>
   );
 };

@@ -1,18 +1,15 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { TodoContext } from '../context/TodoContext';
-import { cakeActions } from '../store/Slices/cakeSlice';
-import { iceCreamActions } from '../store/Slices/iceCreamSlice';
-import '../styles/screens/home.css';
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { TodoContext } from "../context/TodoContext";
+import "../styles/screens/home.css";
 
-const TOKEN = '';
+const TOKEN = "";
 const HomeScreen = () => {
   const { todos, addTodoToLocalStorage } = useContext(TodoContext);
   const [file, setFile] = useState(null);
   const [files, setFiles] = useState([]);
-  const [formats, setFormats] = useState('');
-  const [description, setDescription] = useState('');
+  const [formats, setFormats] = useState("");
+  const [description, setDescription] = useState("");
 
   const formHandler = async (e) => {
     e.preventDefault();
@@ -20,27 +17,27 @@ const HomeScreen = () => {
       const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNGFhZjVlZWU2YWFmOTc0YWFmNzgyNCIsImlhdCI6MTY1MDI3MDYyNywiZXhwIjoxNjU4MDQ2NjI3fQ.DPNAmayBSYX1FCVqb5pAI9N3FykZk4ovoUIraqKMb_c`;
 
       let data = new FormData();
-      data.append('coverPhoto', file);
-      data.append('title', 'file uploading');
-      data.append('description', description);
-      data.append('cost', 300);
-      data.append('resolutionWidth', 1020);
-      data.append('resolutionHeight', 600);
+      data.append("coverPhoto", file);
+      data.append("title", "file uploading");
+      data.append("description", description);
+      data.append("cost", 300);
+      data.append("resolutionWidth", 1020);
+      data.append("resolutionHeight", 600);
 
       // data.append('formats', ['png', 'jpg', 'psd']);
       // dont do in this way  formats will save in this way in db "formats": ["png,xd,psd,jpg"]
 
-      for (const format of formats.split(',')) {
-        data.append('formats', format.trim());
+      for (const format of formats.split(",")) {
+        data.append("formats", format.trim());
       }
       for (const file of files) {
-        data.append('gallery', file);
+        data.append("gallery", file);
       }
 
-      data.append('orientation', 'portrait');
-      data.append('subject', 'uploading');
+      data.append("orientation", "portrait");
+      data.append("subject", "uploading");
 
-      console.log('enter', data, file, files);
+      console.log("enter", data, file, files);
       // axios
       //   .post('https://httpbin.org/anything', data)
       //   .then((res) => {
@@ -51,11 +48,11 @@ const HomeScreen = () => {
       //   });
       const res = await axios({
         url: `http://localhost:8080/uploads`,
-        method: 'POST',
+        method: "POST",
         data: data,
         headers: {
           // Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -100,16 +97,16 @@ const HomeScreen = () => {
     //   </div>
     // </div>
     <>
-      <form onSubmit={formHandler} className='createArtScreen_form'>
+      <form onSubmit={formHandler} className="createArtScreen_form">
         <input
-          type='file'
-          name='coverPhoto'
+          type="file"
+          name="coverPhoto"
           required
           onChange={(e) => setFile(e.target.files[0])}
         />
         <input
-          type='file'
-          name='gallery'
+          type="file"
+          name="gallery"
           multiple
           required
           onChange={(e) => setFiles(e.target.files)}
@@ -120,9 +117,9 @@ const HomeScreen = () => {
           onChange={(e) => setFormats(e.target.value)}
           className='border border-emerald-500'
         /> */}
-        <button type='submit'>Submit</button>
+        <button type="submit">Submit</button>
       </form>
-      <ol className='ml-5'>
+      <ol className="ml-5">
         {todos?.length > 0 &&
           todos?.map((t, i) => (
             <li key={i}>
@@ -131,10 +128,10 @@ const HomeScreen = () => {
           ))}
       </ol>
       <input
-        type='text'
-        placeholder='Enter todos'
+        type="text"
+        placeholder="Enter todos"
         onChange={(e) => setFormats(e.target.value)}
-        className='border border-emerald-500'
+        className="border border-emerald-500"
         required
       />
       <button

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   numOfCakes: 20,
@@ -21,7 +21,7 @@ const cakeSlice = createSlice({
   initialState: {
     numOfCakes: 20,
   },
-  name: 'cake',
+  name: "cake",
   reducers: {
     ordered: (state, action) => {
       state.numOfCakes--;

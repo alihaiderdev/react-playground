@@ -1,46 +1,41 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  NavLink,
-  useLocation,
-} from 'react-router-dom';
-import HomeScreen from './screens/HomeScreen';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 // import ArtScreen from './screens/CreateArtScreen';
 // import ArtsScreen from './screens/ArtsScreen';
 // import CreateArtScreen from './screens/CreateArtScreen';
 // import Art from './screens/Art';
 // import Home from './screens/Home';
-import { TodosContextProvider } from './context/TodoContext';
-import UsersScreen from './screens/UsersScreen';
 import SearchScreen from './screens/SearchScreen';
+import UsersScreen from './screens/UsersScreen';
 // import ChangePassword from './screens/Auth/ChangePassword';
-// import Signup from './screens/Auth/Signup';
-// import Login from './screens/Auth/Login';
-// import axios from 'axios';
-import { useEffect } from 'react';
+import axios from 'axios';
+import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './screens/Auth/Login';
+import Signup from './screens/Auth/Signup';
+import Dashboard from './screens/Dashboard';
+import PageNotFound from './screens/PageNotFound';
+import Product from './screens/Product';
+import Products from './screens/Products';
 import QuestionsScreen from './screens/QuestionsScreen';
-import { fetchQuestions } from './store/Slices/questionsSlice';
-import { useDispatch } from 'react-redux';
-import FormScreen from './screens/FormScreen';
+import StrapiCrud from './screens/StrapiCrud';
+import { useSelector } from 'react-redux';
 
 const App = () => {
   // const { pathname } = useLocation();
   // console.log(pathname);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchQuestions());
-  }, []);
+  // const dispatch = useDispatch();
+  const { reloadKey } = useSelector((state) => state.auth);
 
   // useEffect(() => {
-  //   axios.defaults.baseURL = 'http://localhost:1337';
-  //   axios.defaults.headers.post['Content-Type'] = 'application/json';
-  //   const jwtToken = localStorage.getItem('jwt');
+  //   const jwtToken = localStorage.getItem("jwt");
   //   if (jwtToken) {
-  //     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+  //     axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
   //   }
-  // }, [localStorage.getItem('jwt')]);
+  // }, [localStorage.getItem("jwt")]);
+
+  axios.defaults.baseURL =
+    process.env.REACT_APP_SERVER_URL || 'http://localhost:1337';
+  axios.defaults.headers.post['Content-Type'] = 'application/json';
 
   return (
     <BrowserRouter>
@@ -74,8 +69,10 @@ const App = () => {
           </li>
         </ul>
       </nav> */}
-      <Routes>
-        {/* <Route
+
+      <Layout key={reloadKey}>
+        <Routes>
+          {/* <Route
           path='/'
           element={
             <TodosContextProvider>
@@ -83,23 +80,30 @@ const App = () => {
             </TodosContextProvider>
           }
         /> */}
-        {/* 
-        <Route path='/auth/register' element={<Signup />} />
-        <Route path='/auth/login' element={<Login />} />
-        <Route path='/auth/change-password' element={<ChangePassword />} />
-        */}
-        <Route path='/' element={<UsersScreen />} />
-        <Route path='/search' element={<SearchScreen />} />
-        <Route path='/questions' element={<QuestionsScreen />} />
-        <Route path='/form' element={<FormScreen />} />
+          {/* <Route path="/auth/change-password" element={<ChangePassword />} />
+          <Route path="/form" element={<FormScreen />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/" element={<CreateArtScreen />} />
+          <Route path="/arts" element={<ArtsScreen />} />
+          <Route path="/art" element={<Art />} />
+          <Route path="/arts/:artId" element={<ArtScreen />} /> */}
 
-        {/* <Route path='/' element={<Home />} /> */}
-        {/* <Route path='/' element={<CreateArtScreen />} /> */}
-        {/* <Route path='/arts' element={<ArtsScreen />} />
-        {/* <Route path='/art' element={<Art />} /> */}
-        {/* <Route path='/arts/:artId' element={<ArtScreen />} />
-         */}
-      </Routes>
+          <Route path='/auth/register' element={<Signup />} />
+          <Route path='/auth/login' element={<Login />} />
+
+          <Route path='/' element={<UsersScreen />} />
+          <Route path='/search' element={<SearchScreen />} />
+          <Route path='/questions' element={<QuestionsScreen />} />
+          <Route path='/strapi' element={<StrapiCrud />} />
+          <Route path='/products' element={<Products />} />
+          <Route
+            path='/dashboard'
+            element={<ProtectedRoute Component={Dashboard} />}
+          />
+          <Route path='/products/:id' element={<Product />} />
+          <Route path='*' element={<PageNotFound />} />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 };

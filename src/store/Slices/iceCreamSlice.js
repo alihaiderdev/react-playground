@@ -1,12 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { cakeActions } from './cakeSlice';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   numOfIcecreams: 10,
 };
 
 const iceCreamSlice = createSlice({
-  name: 'icecream',
+  name: "icecream",
   initialState,
   reducers: {
     ordered: (state) => {

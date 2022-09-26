@@ -35,7 +35,7 @@
   margin: 5rem auto;
 }
 
-.createArtScreen_form input[type='text'],
+.createArtScreen_form input[type="text"],
 .createArtScreen_form textarea {
   padding: 0.5rem;
   margin: 0.75rem 0;
@@ -44,4 +44,31 @@
 
 .createArtScreen_form textarea {
   resize: none;
+}
+
+.skeleton {
+  opacity: 0.7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 1.25rem;
+  margin: 0;
+  margin-bottom: 0.25rem;
+  border-radius: 0.125rem;
+}
+
+.skeleton-text:last-child {
+  width: 80%;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
 }
