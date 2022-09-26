@@ -37,8 +37,6 @@ const Products = () => {
     setCurrentPageNumber(page);
   };
 
-  console.log({ meta });
-
   useEffect(() => {
     dispatch(
       fetchProducts(
