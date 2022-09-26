@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import PlaceholderImage from '../assets/images/placeholder.webp';
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat(undefined, {
@@ -35,3 +37,57 @@ export const convertToUSD = (number) => {
     // compactDisplay: "short",
   }).format(number);
 };
+
+// https://whereisthemouse.com/how-to-use-withrouter-hoc-in-react-router-v6-with-typescript
+
+/**
+ * Create custom withRouter Higher Order Component
+ * @param {any} Component
+ * @returns
+ */
+
+export const withRouter = (Component) => {
+  const ComponentWithRouterProp = (props) => {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        location={location}
+        params={params}
+        navigate={navigate}
+      />
+    );
+  };
+  return ComponentWithRouterProp;
+};
+
+const parseJwt = (token) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
+// https://stackoverflow.com/questions/68782781/react-router-v6-history-listen
+// I would hate to use useLocation because it also renders if the state changes,
+
+// https://www.bezkoder.com/handle-jwt-token-expiration-react/#:~:text=There%20are%20two%20ways%20to%20check%20if%20Token%20is%20expired%20or%20not.&text=I%20will%20show%20you%20the,us%20the%20token%20is%20expired
+
+const AuthVerify = (props) => {
+  let location = useLocation();
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      const decodedJwt = parseJwt(user.jwt);
+      if (decodedJwt.exp * 1000 < Date.now()) {
+        props.logout();
+      }
+    }
+  }, [location, props]);
+
+  return;
+};
+
+export default AuthVerify;

@@ -18,12 +18,15 @@ import Product from './screens/Product';
 import Products from './screens/Products';
 import QuestionsScreen from './screens/QuestionsScreen';
 import StrapiCrud from './screens/StrapiCrud';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from './store/Slices/authSlice';
+import AuthVerify from './utilities';
+import { useCallback } from 'react';
 
 const App = () => {
   // const { pathname } = useLocation();
   // console.log(pathname);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { reloadKey } = useSelector((state) => state.auth);
 
   // useEffect(() => {
@@ -36,6 +39,10 @@ const App = () => {
   axios.defaults.baseURL =
     process.env.REACT_APP_SERVER_URL || 'http://localhost:1337';
   axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+  const logout = useCallback(() => {
+    dispatch(authActions.logout());
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
@@ -103,6 +110,7 @@ const App = () => {
           <Route path='/products/:id' element={<Product />} />
           <Route path='*' element={<PageNotFound />} />
         </Routes>
+        <AuthVerify logout={logout} />
       </Layout>
     </BrowserRouter>
   );
