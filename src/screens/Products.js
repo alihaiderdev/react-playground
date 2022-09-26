@@ -1,9 +1,9 @@
 // import { faker } from "@faker-js/faker";
-import React, { memo, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import LoadingSkeleton from "../components/LoadingSkeleton";
-import ProductItem from "../components/ProductItem";
-import { fetchProducts } from "../store/Slices/productSlice";
+import React, { memo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import LoadingSkeleton from '../components/LoadingSkeleton';
+import ProductItem from '../components/ProductItem';
+import { fetchProducts } from '../store/Slices/productSlice';
 
 // const ids = { categories: [1, 2, 3, 4, 5], users: [1, 2, 3, 4] };
 // const { categories, users } = ids;
@@ -30,16 +30,16 @@ const Products = () => {
         `/api/products?populate=image&pagination[page]=1&pagination[pageSize]=100`
       )
     );
-  }, []);
+  }, [dispatch]);
 
   return (
-    <section className="text-gray-600 body-font">
+    <section className='text-gray-600 body-font'>
       {!isLoading && error && <h1>{error}</h1>}
       {isLoading ? (
         <LoadingSkeleton />
       ) : (
         <>
-          <div className="flex flex-wrap -m-4">
+          <div className='flex flex-wrap -m-4'>
             {products?.length > 0 &&
               products?.map((product) => {
                 return (

@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import PlaceholderImage from '../assets/images/placeholder.webp';
 
+export const placeholderImageUrl =
+  'https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/quickbooks/web/content/default-placeholder.png';
+
 const CURRENCY_FORMATTER = new Intl.NumberFormat(undefined, {
   style: 'currency',
   currency: 'USD',
@@ -15,14 +18,15 @@ export const imageUrlFormatter = (url) => {
   if (url) {
     const SERVER_URL =
       process.env.REACT_APP_SERVER_URL || `http://localhost:1337`;
-
     return `${SERVER_URL}${url}`;
   }
 };
 
 export const imageErrorHandler = (currentTarget) => {
   currentTarget.onerror = null;
-  currentTarget.src = require('../assets/images/placeholder.webp');
+  // currentTarget.src = PlaceholderImage;
+  // currentTarget.src = require('../assets/images/placeholder.webp');
+  currentTarget.src = placeholderImageUrl;
 };
 
 // Intl.NumberFormat
@@ -87,7 +91,7 @@ const AuthVerify = (props) => {
     }
   }, [location, props]);
 
-  return;
+  return null;
 };
 
 export default AuthVerify;
