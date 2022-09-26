@@ -1,19 +1,19 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState = {
   isLoading: false,
   products: [],
-  error: "",
+  error: '',
   meta: {},
 };
 
 export const fetchProducts = createAsyncThunk(
-  "product/fetchProducts",
+  'product/fetchProducts',
   (url) => {
     return axios(url, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         // Authorization: `Bearer ${TOKEN}`,
       },
     })
@@ -25,7 +25,7 @@ export const fetchProducts = createAsyncThunk(
 );
 
 const productSlice = createSlice({
-  name: "product",
+  name: 'product',
   initialState,
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state) => {
@@ -33,10 +33,11 @@ const productSlice = createSlice({
     });
     builder.addCase(fetchProducts.fulfilled, (state, { type, payload }) => {
       state.isLoading = false;
-      state.products =
-        state.products?.length > 0
-          ? [...state.products, ...payload.products]
-          : payload.products;
+      // state.products =
+      //   state.products?.length > 0
+      //     ? [...state.products, ...payload.products]
+      //     : payload.products;
+      state.products = payload.products;
       state.meta = payload.meta;
     });
     builder.addCase(fetchProducts.rejected, (state, { type, payload }) => {

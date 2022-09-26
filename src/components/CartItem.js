@@ -13,8 +13,6 @@ const CartItem = ({ id, quantity }) => {
   const item = products?.find((product) => product.id === id)?.attributes;
   if (item == null) return null;
 
-  console.log(item);
-
   return (
     <div className='grid grid-cols-12 gap-3 my-4'>
       <div className='col-span-5'>
