@@ -1,16 +1,16 @@
-import { Rate } from 'antd';
-import { useParams } from 'react-router-dom';
-import IncreaseDecreaseAndRemoveButtons from '../components/IncreaseDecreaseAndRemoveButtons';
-import { useShoppingCart } from '../context/CartContext';
-import { useFetchData } from '../hooks/useFetchData';
+import { Rate } from "antd";
+import { useParams } from "react-router-dom";
+import IncreaseDecreaseAndRemoveButtons from "../components/IncreaseDecreaseAndRemoveButtons";
+import { useShoppingCart } from "../context/CartContext";
+import { useRead } from "../hooks";
 import {
   convertToUSD,
   imageErrorHandler,
   imageUrlFormatter,
   placeholderImageUrl,
-} from '../utilities';
+} from "../utilities";
 
-const description = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
+const description = ["terrible", "bad", "normal", "good", "wonderful"];
 
 const Product = () => {
   const { id: productId } = useParams();
@@ -20,29 +20,29 @@ const Product = () => {
     isLoading,
     error,
     data: { id, attributes },
-  } = useFetchData(
-    `/api/products/${productId}?populate=user,image,reviews.user`
-  );
+  } = useRead({
+    url: `/api/products/${productId}?populate=user,image,reviews.user`,
+  });
 
   const qty = getItemQuantity(id);
 
   return (
-    <section className='grid grid-cols-12 gap-6'>
+    <section className="grid grid-cols-12 gap-6">
       {!isLoading && error && (
-        <div className='col-span-12 text-center'>
-          <h1 className='text-indigo-600 font-bold text-3xl'>{error}</h1>
+        <div className="col-span-12 text-center">
+          <h1 className="text-indigo-600 font-bold text-3xl">{error}</h1>
         </div>
       )}
       {isLoading ? (
-        <h1 className='text-indigo-600 font-bold text-3xl'>Loading...</h1>
+        <h1 className="text-indigo-600 font-bold text-3xl">Loading...</h1>
       ) : (
         !error && (
           <>
-            <div className='col-span-12 md:col-span-6'>
-              <span className='block relative rounded overflow-hidden'>
+            <div className="col-span-12 md:col-span-6">
+              <span className="block relative rounded overflow-hidden">
                 <img
                   alt={attributes?.title}
-                  className='object-cover object-center w-full h-full block'
+                  className="object-cover object-center w-full h-full block"
                   src={
                     attributes?.image?.data
                       ? imageUrlFormatter(
@@ -56,29 +56,29 @@ const Product = () => {
                 />
               </span>
             </div>
-            <div className='col-span-12 md:col-span-6'>
-              <h1 className='text-indigo-600 font-bold text-3xl'>
+            <div className="col-span-12 md:col-span-6">
+              <h1 className="text-indigo-600 font-bold text-3xl">
                 {attributes?.title}
               </h1>
               <Rate
                 tooltips={description}
-                className='text-indigo-600 pt-4'
+                className="text-indigo-600 pt-4"
                 allowHalf
                 disabled
                 defaultValue={attributes?.averageRating}
               />
               <p
-                className='py-4'
+                className="py-4"
                 dangerouslySetInnerHTML={{ __html: attributes?.description }}
               ></p>
-              <ul className='text-indigo-600 text-xl'>
-                <li className='pb-2'>
-                  Quantity:{' '}
-                  <span className='font-black'>{attributes?.quantity}</span>
+              <ul className="text-indigo-600 text-xl">
+                <li className="pb-2">
+                  Quantity:{" "}
+                  <span className="font-black">{attributes?.quantity}</span>
                 </li>
-                <li className='pb-2'>
-                  Price:{' '}
-                  <span className='font-black'>
+                <li className="pb-2">
+                  Price:{" "}
+                  <span className="font-black">
                     {convertToUSD(attributes?.price)}
                   </span>
                 </li>

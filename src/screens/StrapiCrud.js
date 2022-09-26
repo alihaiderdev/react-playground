@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import products from "../products.json";
+import { getIds } from "../utilities";
+import { create, read } from "../utilities/scripts";
 
-const ids = { categories: [1, 2, 3, 4, 5], users: [1, 2, 3, 4] };
-const { categories, users } = ids;
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjYzOTM2MTA5LCJleHAiOjE2NjQwMjI1MDl9.INMpP217dBhSOitvvcCGNoNu4xsMaFzI_VPdZSnVTmY";
+// const ids = { categories: [1, 2, 3, 4, 5], users: [1, 2, 3, 4] };
+// const { categories, users } = ids;
 
 const StrapiCrud = () => {
   const createMultipleProducts = async (product) => {
     try {
-      console.log({ product });
       const config = {
         method: "POST",
         headers: {
@@ -26,8 +25,21 @@ const StrapiCrud = () => {
       console.log({ error });
     }
   };
-  useEffect(() => {
-    console.log(products);
+
+  //   useEffect(() => {
+  //     products.forEach(async (product) => {
+  //       product = {
+  //         ...product,
+  //         categories: [categories[Math.floor(Math.random() * categories.length)]],
+  //         user: users[Math.floor(Math.random() * users.length)],
+  //       };
+  //       //   await createMultipleProducts(product);
+  //     });
+  //   }, []);
+
+  useEffect(async () => {
+    const categories = getIds(await read({ url: `/api/categories` }));
+    const users = getIds(await read({ url: `/api/users` }));
 
     products.forEach(async (product) => {
       product = {
@@ -35,7 +47,7 @@ const StrapiCrud = () => {
         categories: [categories[Math.floor(Math.random() * categories.length)]],
         user: users[Math.floor(Math.random() * users.length)],
       };
-      //   await createMultipleProducts(product);
+      await create({ url: `/api/products`, fields: product });
     });
   }, []);
 

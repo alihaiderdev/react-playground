@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import PlaceholderImage from '../assets/images/placeholder.webp';
+import { useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const placeholderImageUrl =
-  'https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/quickbooks/web/content/default-placeholder.png';
+  "https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/quickbooks/web/content/default-placeholder.png";
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat(undefined, {
-  style: 'currency',
-  currency: 'USD',
+  style: "currency",
+  currency: "USD",
 });
 
 export function formatCurrency(number) {
@@ -34,9 +33,9 @@ export const imageErrorHandler = (currentTarget) => {
 // https://fireship.io/snippets/currency-formatting/
 
 export const convertToUSD = (number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     // notation: "compact",
     // compactDisplay: "short",
   }).format(number);
@@ -69,7 +68,7 @@ export const withRouter = (Component) => {
 
 const parseJwt = (token) => {
   try {
-    return JSON.parse(atob(token.split('.')[1]));
+    return JSON.parse(atob(token.split(".")[1]));
   } catch (e) {
     return null;
   }
@@ -82,7 +81,7 @@ const parseJwt = (token) => {
 const AuthVerify = (props) => {
   let location = useLocation();
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       const decodedJwt = parseJwt(user.jwt);
       if (decodedJwt.exp * 1000 < Date.now()) {
@@ -95,3 +94,17 @@ const AuthVerify = (props) => {
 };
 
 export default AuthVerify;
+
+// Method 1:
+// Array.isArray(variable)
+
+// Method 2:
+// variable instanceof Array
+
+// Method 3:
+// variable.constructor === Array
+export const getIds = (items) => {
+  if (Array.isArray(items) && items?.length > 0) {
+    return items?.map((d) => d.id);
+  }
+};
