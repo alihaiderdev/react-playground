@@ -34,11 +34,16 @@ export const login = createAsyncThunk('auth/login', ({ url, userInfo }) => {
 export const fetchLoggedInUserDetails = createAsyncThunk(
   'auth/fetchLoggedInUserDetails',
   () => {
-    return axios(`/api/users/1?populate=shippingAddress, billingAddress`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const loggedInUserId = JSON.parse(localStorage.getItem('user'))?.user?.id;
+    console.log(loggedInUserId);
+    return axios(
+      `/api/users/${loggedInUserId}?populate=shippingAddress, billingAddress`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
       .then(({ data }) => {
         return data;
       })

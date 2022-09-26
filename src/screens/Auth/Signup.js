@@ -1,10 +1,10 @@
-import { message } from "antd";
-import axios from "axios";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import AuthFormsLayout from "../../components/AuthFormsLayout";
-import Input from "../../components/Input";
+import { message } from 'antd';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import AuthFormsLayout from '../../components/AuthFormsLayout';
+import Input from '../../components/Input';
 
 const success = (text) => {
   message.success(text);
@@ -19,9 +19,9 @@ const Signup = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [signup, setSignup] = useState({
-    username: "",
-    email: "",
-    password: "",
+    username: '',
+    email: '',
+    password: '',
   });
 
   const { username, email, password } = signup;
@@ -31,18 +31,17 @@ const Signup = () => {
     try {
       await axios(`/api/auth/local/register`, {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        method: "POST",
+        method: 'POST',
         data: JSON.stringify(signup),
       });
-      success("Successfully Register");
-      navigate("/auth/login");
+      success('Successfully Register');
+      navigate('/auth/login');
       // setSignup({ username: "", email: "", password: "" });
     } catch ({ message }) {
       console.log(message);
-      error("Email or Username are already taken");
-    } finally {
+      error('Email or Username are already taken');
     }
   };
 
@@ -51,30 +50,30 @@ const Signup = () => {
   };
 
   return (
-    <AuthFormsLayout title={"Register"}>
-      <form onSubmit={submitHandler} autoComplete="off" autoCapitalize="off">
+    <AuthFormsLayout title={'Register'}>
+      <form onSubmit={submitHandler} autoComplete='off' autoCapitalize='off'>
         <Input
-          type={"text"}
-          name={"username"}
+          type={'text'}
+          name={'username'}
           value={username}
           handler={onValueChangeHandler}
         />
         <Input
-          type={"email"}
-          name={"email"}
+          type={'email'}
+          name={'email'}
           value={email}
           handler={onValueChangeHandler}
         />
         <Input
-          type={"password"}
-          name={"password"}
+          type={'password'}
+          name={'password'}
           value={password}
           handler={onValueChangeHandler}
         />
         <div>
           <button
-            type="submit"
-            className="bg-indigo-600 py-3 px-8 text-white rounded-md ml-auto block"
+            type='submit'
+            className='bg-indigo-600 py-3 px-8 text-white rounded-md ml-auto block'
           >
             Register
           </button>

@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import AuthFormsLayout from "../../components/AuthFormsLayout";
-import Input from "../../components/Input";
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import AuthFormsLayout from '../../components/AuthFormsLayout';
+import Input from '../../components/Input';
 import {
   fetchLoggedInUserDetails,
   login as signin,
-} from "../../store/Slices/authSlice";
+} from '../../store/Slices/authSlice';
 
 const Login = () => {
-  const [user] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [login, setLogin] = useState({
-    identifier: "",
-    password: "",
+    identifier: '',
+    password: '',
   });
 
   useEffect(() => {
     if (Object.keys(user || {}).length > 0) {
       dispatch(fetchLoggedInUserDetails());
-      return navigate("/products");
+      navigate('/products');
     }
   }, [Object.keys(user || {}).length]);
 
@@ -29,7 +29,9 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(signin({ userInfo: login, url: `/api/auth/local` }));
+    const loggedInUser = await dispatch(
+      signin({ userInfo: login, url: `/api/auth/local` })
+    );
   };
 
   const onValueChangeHandler = ({ target: { name, value } }) => {
@@ -37,24 +39,24 @@ const Login = () => {
   };
 
   return (
-    <AuthFormsLayout title={"Login"} submitHandler={submitHandler}>
-      <form onSubmit={submitHandler} autoComplete="off" autoCapitalize="off">
+    <AuthFormsLayout title={'Login'} submitHandler={submitHandler}>
+      <form onSubmit={submitHandler} autoComplete='off' autoCapitalize='off'>
         <Input
-          type={"text"}
-          name={"identifier"}
+          type={'text'}
+          name={'identifier'}
           value={identifier}
           handler={onValueChangeHandler}
         />
         <Input
-          type={"password"}
-          name={"password"}
+          type={'password'}
+          name={'password'}
           value={password}
           handler={onValueChangeHandler}
         />
         <div>
           <button
-            type="submit"
-            className="bg-indigo-600 py-3 px-8 text-white rounded-md ml-auto block"
+            type='submit'
+            className='bg-indigo-600 py-3 px-8 text-white rounded-md ml-auto block'
           >
             Login
           </button>
