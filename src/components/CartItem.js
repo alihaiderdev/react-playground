@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import {
   convertToUSD,
   imageErrorHandler,
@@ -7,10 +6,8 @@ import {
 } from '../utilities';
 import IncreaseDecreaseAndRemoveButtons from './IncreaseDecreaseAndRemoveButtons';
 
-const CartItem = ({ id, quantity }) => {
-  const { products } = useSelector((state) => state.product);
-
-  const item = products?.find((product) => product.id === id)?.attributes;
+const CartItem = ({ id, quantity, productsInCart }) => {
+  const item = productsInCart?.find((product) => product.id === id)?.attributes;
   if (item == null) return null;
 
   return (

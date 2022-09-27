@@ -1,12 +1,14 @@
-import { useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 export const placeholderImageUrl =
-  "https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/quickbooks/web/content/default-placeholder.png";
+  'https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/quickbooks/web/content/default-placeholder.png';
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat(undefined, {
-  style: "currency",
-  currency: "USD",
+  style: 'currency',
+  currency: 'USD',
 });
 
 export function formatCurrency(number) {
@@ -33,9 +35,9 @@ export const imageErrorHandler = (currentTarget) => {
 // https://fireship.io/snippets/currency-formatting/
 
 export const convertToUSD = (number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
     // notation: "compact",
     // compactDisplay: "short",
   }).format(number);
@@ -68,7 +70,7 @@ export const withRouter = (Component) => {
 
 const parseJwt = (token) => {
   try {
-    return JSON.parse(atob(token.split(".")[1]));
+    return JSON.parse(atob(token.split('.')[1]));
   } catch (e) {
     return null;
   }
@@ -81,7 +83,7 @@ const parseJwt = (token) => {
 const AuthVerify = (props) => {
   let location = useLocation();
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       const decodedJwt = parseJwt(user.jwt);
       if (decodedJwt.exp * 1000 < Date.now()) {
@@ -108,3 +110,14 @@ export const getIds = (items) => {
     return items?.map((d) => d.id);
   }
 };
+
+export const getListAsync = ({ type, url }) =>
+  createAsyncThunk(type, (url) => {
+    return axios(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(({ data }) => ({ products: data.data, meta: data.meta.pagination }))
+      .catch((error) => error.message);
+  });

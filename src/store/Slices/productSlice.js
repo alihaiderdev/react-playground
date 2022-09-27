@@ -6,6 +6,7 @@ const initialState = {
   products: [],
   error: '',
   meta: {},
+  productsInCart: [],
 };
 
 export const fetchProducts = createAsyncThunk(
@@ -14,12 +15,24 @@ export const fetchProducts = createAsyncThunk(
     return axios(url, {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${TOKEN}`,
       },
     })
       .then(({ data }) => {
         return { products: data.data, meta: data.meta.pagination };
       })
+      .catch((error) => error.message);
+  }
+);
+
+export const fetchCartProductsList = createAsyncThunk(
+  'product/fetchCartProductsList',
+  (url) => {
+    return axios(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(({ data }) => data.data)
       .catch((error) => error.message);
   }
 );
@@ -33,10 +46,6 @@ const productSlice = createSlice({
     });
     builder.addCase(fetchProducts.fulfilled, (state, { type, payload }) => {
       state.isLoading = false;
-      // state.products =
-      //   state.products?.length > 0
-      //     ? [...state.products, ...payload.products]
-      //     : payload.products;
       state.products = payload.products;
       state.meta = payload.meta;
     });
@@ -44,6 +53,24 @@ const productSlice = createSlice({
       state.isLoading = false;
       state.error = payload;
     });
+    builder.addCase(fetchCartProductsList.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      fetchCartProductsList.fulfilled,
+      (state, { type, payload }) => {
+        state.isLoading = false;
+        state.productsInCart = payload;
+        state.meta = payload.meta;
+      }
+    );
+    builder.addCase(
+      fetchCartProductsList.rejected,
+      (state, { type, payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      }
+    );
   },
 });
 
