@@ -1,5 +1,4 @@
 import { Drawer } from 'antd';
-import { useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useShoppingCart } from '../context/CartContext';

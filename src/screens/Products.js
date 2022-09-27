@@ -1,22 +1,9 @@
-// import { faker } from "@faker-js/faker";
 import { Pagination } from 'antd';
 import React, { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import ProductItem from '../components/ProductItem';
 import { fetchProducts } from '../store/Slices/productSlice';
-
-// const ids = { categories: [1, 2, 3, 4, 5], users: [1, 2, 3, 4] };
-// const { categories, users } = ids;
-// products = products.map((product, index) => {
-//   return {
-//     ...product,
-//     id: index + 1,
-//     categories: [categories[Math.floor(Math.random() * categories.length)]],
-//     user: users[Math.floor(Math.random() * users.length)],
-//     image: faker.image.food(2048, 1080, true),
-//   };
-// });
 
 const showTotal = (total) => `${total} Total Items: `;
 

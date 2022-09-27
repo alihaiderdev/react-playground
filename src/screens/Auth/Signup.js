@@ -5,14 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import AuthFormsLayout from '../../components/AuthFormsLayout';
 import Input from '../../components/Input';
-
-const success = (text) => {
-  message.success(text);
-};
-
-const error = (text) => {
-  message.error(text);
-};
+import { error, success } from '../../utilities';
 
 const Signup = () => {
   const dispatch = useDispatch();

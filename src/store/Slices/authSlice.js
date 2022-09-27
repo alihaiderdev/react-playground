@@ -35,7 +35,6 @@ export const fetchLoggedInUserDetails = createAsyncThunk(
   'auth/fetchLoggedInUserDetails',
   () => {
     const loggedInUserId = JSON.parse(localStorage.getItem('user'))?.user?.id;
-    console.log(loggedInUserId);
     return axios(
       `/api/users/${loggedInUserId}?populate=shippingAddress, billingAddress`,
       {

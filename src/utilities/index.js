@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -84,7 +85,7 @@ const AuthVerify = (props) => {
   let location = useLocation();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
+    if (Object.keys(user || {})?.length > 0) {
       const decodedJwt = parseJwt(user.jwt);
       if (decodedJwt.exp * 1000 < Date.now()) {
         props.logout();
@@ -121,3 +122,11 @@ export const getListAsync = ({ type, url }) =>
       .then(({ data }) => ({ products: data.data, meta: data.meta.pagination }))
       .catch((error) => error.message);
   });
+
+export const success = (text) => {
+  message.success(text);
+};
+
+export const error = (text) => {
+  message.error(text);
+};
