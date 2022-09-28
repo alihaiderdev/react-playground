@@ -7,6 +7,8 @@ import { useAuthAndCartContext } from './context';
 import Login from './screens/Auth/Login';
 import Signup from './screens/Auth/Signup';
 import Dashboard from './screens/Dashboard';
+import OrderFail from './screens/OrderFail';
+import OrderSuccess from './screens/OrderSuccess';
 import PageNotFound from './screens/PageNotFound';
 import Product from './screens/Product';
 import Products from './screens/Products';
@@ -73,6 +75,8 @@ const App = () => {
             element={<ProtectedRoute Component={Dashboard} />}
           />
           <Route path='/products/:id' element={<Product />} />
+          <Route path='/order/success' element={<OrderSuccess />} />
+          <Route path='/order/fail' element={<OrderFail />} />
 
           {/* if user go to any route from URl that does not exists then its your choice either show him a 404 not found page or simply redirect to website home page  */}
           <Route path='*' element={<PageNotFound />} />
