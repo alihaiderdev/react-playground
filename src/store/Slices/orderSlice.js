@@ -9,11 +9,7 @@ const initialState = {
 
 export const fetchOrders = createAsyncThunk("order/fetchOrders", (url) => {
   // `/api/users/${user?.user.id}?populate=orders.products, orders.products.image, shippingAddress, shippingAddress.profile, billingAddress, billingAddress.profile`
-  return axios(url, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+  return axios(url)
     .then(({ data }) => {
       return data?.orders;
     })

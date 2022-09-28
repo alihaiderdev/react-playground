@@ -12,11 +12,7 @@ const initialState = {
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   (url) => {
-    return axios(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    return axios(url)
       .then(({ data }) => {
         return { products: data.data, meta: data.meta.pagination };
       })
@@ -27,11 +23,7 @@ export const fetchProducts = createAsyncThunk(
 export const fetchCartProductsList = createAsyncThunk(
   "product/fetchCartProductsList",
   (url) => {
-    return axios(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    return axios(url)
       .then(({ data }) => data.data)
       .catch((error) => error.message);
   }

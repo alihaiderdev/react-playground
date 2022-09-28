@@ -1,20 +1,10 @@
 import axios from "axios";
-import { constant } from "../constants";
-
-export const config = {
-  headers: {
-    Authorization: `Bearer ${constant.TOKEN}`,
-  },
-};
 
 export const create = async ({ url, fields }) => {
   try {
     const {
       data: { data },
     } = await axios.post(url, {
-      headers: {
-        Authorization: `Bearer ${constant.TOKEN}`,
-      },
       data: JSON.stringify({ data: fields }),
     });
   } catch (error) {
@@ -45,7 +35,6 @@ export const update = async ({ url, fields }) => {
     const {
       data: { data },
     } = await axios.put(url, {
-      ...config,
       data: JSON.stringify({ data: fields }),
     });
     console.log({ data });

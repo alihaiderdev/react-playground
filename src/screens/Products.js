@@ -27,7 +27,7 @@ const Products = () => {
   useEffect(() => {
     dispatch(
       fetchProducts(
-        `/api/products?populate=image&pagination[page]=${currentPageNumber}&pagination[pageSize]=${itemsPerPage}`
+        `/api/products?filters[available]=true&populate=image&pagination[page]=${currentPageNumber}&pagination[pageSize]=${itemsPerPage}`
       )
     );
   }, [itemsPerPage, currentPageNumber]);

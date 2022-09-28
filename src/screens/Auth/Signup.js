@@ -1,6 +1,6 @@
+import { Spin } from "antd";
 import axios from "axios";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AuthFormsLayout from "../../components/AuthFormsLayout";
 import Input from "../../components/Input";
@@ -8,7 +8,7 @@ import { error, success } from "../../utilities";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+
   const [signup, setSignup] = useState({
     username: "",
     email: "",
@@ -22,7 +22,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const { data } = await axios(`/api/auth/local/register`, {
+      await axios(`/api/auth/local/register`, {
         method: "POST",
         data: JSON.stringify(signup),
       });
@@ -67,6 +67,7 @@ const Signup = () => {
             type="submit"
             className="bg-indigo-600 py-3 px-8 text-white rounded-md ml-auto block"
           >
+            {isLoading && <Spin className="mr-2" />}
             Register
           </button>
         </div>
