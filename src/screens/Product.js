@@ -1,7 +1,7 @@
 import { Rate } from "antd";
 import { useParams } from "react-router-dom";
 import IncreaseDecreaseAndRemoveButtons from "../components/IncreaseDecreaseAndRemoveButtons";
-import { useShoppingCart } from "../context/CartContext";
+import { useAuthAndCartContext } from "../context";
 import { useRead } from "../hooks";
 import {
   convertToUSD,
@@ -14,7 +14,7 @@ const description = ["terrible", "bad", "normal", "good", "wonderful"];
 
 const Product = () => {
   const { id: productId } = useParams();
-  const { getItemQuantity } = useShoppingCart();
+  const { getItemQuantity } = useAuthAndCartContext();
 
   const {
     isLoading,

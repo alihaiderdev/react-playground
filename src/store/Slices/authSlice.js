@@ -1,28 +1,17 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { message } from 'antd';
-import axios from 'axios';
-
-const success = (text) => {
-  message.success(text);
-};
-
-const error = (text) => {
-  message.error(text);
-};
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { error, success } from "../../utilities";
 
 const initialState = {
   isLoading: false,
   user: {},
-  error: '',
+  error: "",
   reloadKey: Math.random(),
 };
 
-export const login = createAsyncThunk('auth/login', ({ url, userInfo }) => {
+export const login = createAsyncThunk("auth/login", ({ url, userInfo }) => {
   return axios(url, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
+    method: "POST",
     data: JSON.stringify(userInfo),
   })
     .then(({ data }) => {
@@ -32,16 +21,11 @@ export const login = createAsyncThunk('auth/login', ({ url, userInfo }) => {
 });
 
 export const fetchLoggedInUserDetails = createAsyncThunk(
-  'auth/fetchLoggedInUserDetails',
+  "auth/fetchLoggedInUserDetails",
   () => {
-    const loggedInUserId = JSON.parse(localStorage.getItem('user'))?.user?.id;
+    const loggedInUserId = JSON.parse(localStorage.getItem("user"))?.user?.id;
     return axios(
-      `/api/users/${loggedInUserId}?populate=shippingAddress, billingAddress`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+      `/api/users/${loggedInUserId}?populate=shippingAddress, billingAddress`
     )
       .then(({ data }) => {
         return data;
@@ -51,12 +35,12 @@ export const fetchLoggedInUserDetails = createAsyncThunk(
 );
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     logout: (state, action) => {
       state.user = {};
-      localStorage.removeItem('user');
+      localStorage.removeItem("user");
       state.reloadKey = Math.random();
     },
   },
@@ -66,24 +50,17 @@ const authSlice = createSlice({
     });
     builder.addCase(login.fulfilled, (state, { type, payload }) => {
       state.isLoading = false;
-      if (typeof payload !== 'object') {
-        error('Invalid identifier or password');
+      if (typeof payload !== "object") {
+        error("Invalid identifier or password");
         return;
       }
-      if ('jwt' in payload) {
+      if ("jwt" in payload) {
         state.user = payload;
-        localStorage.setItem('user', JSON.stringify(payload));
+        localStorage.setItem("user", JSON.stringify(payload));
         state.reloadKey = Math.random();
-        // fetchLoggedInUserDetails()
-        success('Successfully Login');
+        success("Successfully Login");
       }
     });
-
-    // builder.addCase(login.rejected, (state, { type, payload }) => {
-    //   state.isLoading = false;
-    //   state.error = payload;
-    //   error(payload);
-    // });
 
     builder.addCase(fetchLoggedInUserDetails.pending, (state) => {
       state.isLoading = true;
@@ -92,7 +69,7 @@ const authSlice = createSlice({
       fetchLoggedInUserDetails.fulfilled,
       (state, { type, payload }) => {
         state.isLoading = false;
-        const user = JSON.parse(localStorage.getItem('user'));
+        const user = JSON.parse(localStorage.getItem("user"));
         state.user = {
           jwt: user.jwt,
           user: {
@@ -101,7 +78,7 @@ const authSlice = createSlice({
             shippingAddress: payload.shippingAddress,
           },
         };
-        localStorage.setItem('user', JSON.stringify(state.user));
+        localStorage.setItem("user", JSON.stringify(state.user));
         state.reloadKey = Math.random();
       }
     );

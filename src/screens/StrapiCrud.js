@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { constant } from "../constants";
 import products from "../products.json";
 import { getIds } from "../utilities";
 import { create, read } from "../utilities/scripts";
@@ -12,9 +13,7 @@ const StrapiCrud = () => {
       const config = {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.REACT_APP_STRAPI_TOKEN}`,
-          //   Authorization: `Bearer ${TOKEN}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${constant.TOKEN}`,
         },
         body: JSON.stringify({ data: product }),
       };

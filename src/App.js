@@ -1,114 +1,83 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-// import ArtScreen from './screens/CreateArtScreen';
-// import ArtsScreen from './screens/ArtsScreen';
-// import CreateArtScreen from './screens/CreateArtScreen';
-// import Art from './screens/Art';
-// import Home from './screens/Home';
-import SearchScreen from './screens/SearchScreen';
-import UsersScreen from './screens/UsersScreen';
-// import ChangePassword from './screens/Auth/ChangePassword';
-import axios from 'axios';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import Login from './screens/Auth/Login';
-import Signup from './screens/Auth/Signup';
-import Dashboard from './screens/Dashboard';
-import PageNotFound from './screens/PageNotFound';
-import Product from './screens/Product';
-import Products from './screens/Products';
-import QuestionsScreen from './screens/QuestionsScreen';
-import StrapiCrud from './screens/StrapiCrud';
-import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from './store/Slices/authSlice';
-import AuthVerify from './utilities';
-import { useCallback } from 'react';
+import axios from "axios";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { constant } from "./constants";
+import { useAuthAndCartContext } from "./context";
+import Login from "./screens/Auth/Login";
+import Signup from "./screens/Auth/Signup";
+import Dashboard from "./screens/Dashboard";
+import PageNotFound from "./screens/PageNotFound";
+import Product from "./screens/Product";
+import Products from "./screens/Products";
+import AuthVerify from "./utilities";
 
 const App = () => {
   // const { pathname } = useLocation();
-  // console.log(pathname);
-  const dispatch = useDispatch();
-  const { reloadKey } = useSelector((state) => state.auth);
+
+  const { logout, user } = useAuthAndCartContext();
 
   // useEffect(() => {
-  //   const jwtToken = localStorage.getItem("jwt");
-  //   if (jwtToken) {
-  //     axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
+  //   if (Object.keys(user || {}).length > 0) {
+  //     axios.defaults.headers.common["Authorization"] = `Bearer ${user?.jwt}`;
   //   }
-  // }, [localStorage.getItem("jwt")]);
+  // }, [Object.keys(user || {}).length]);
 
-  axios.defaults.baseURL =
-    process.env.REACT_APP_SERVER_URL || 'http://localhost:1337';
-  axios.defaults.headers.post['Content-Type'] = 'application/json';
+  axios.defaults.baseURL = constant.SERVER_BASE_URL;
+  axios.defaults.headers.post["Content-Type"] = "application/json";
 
-  const logout = useCallback(() => {
-    dispatch(authActions.logout());
-  }, [dispatch]);
+  axios.interceptors.request.use(
+    (request) => {
+      // Do something before request is sent
+
+      const methods = ["post", "put", "delete"];
+
+      if (methods.includes(request.method)) {
+        request.headers = {
+          ...request.headers,
+          Authorization: `Bearer ${constant.TOKEN}`,
+        };
+      }
+
+      return request;
+    },
+    (error) => {
+      // Do something with request error
+      return Promise.reject(error);
+    }
+  );
+
+  // axios.interceptors.response.use(
+  //   (response) => {
+  //     // Any status code that lie within the range of 2xx cause this function to trigger
+  //     console.log({ response });
+  //     return response;
+  //   },
+  //   (error) => {
+  //     // Any status codes that falls outside the range of 2xx cause this function to trigger
+  //     return Promise.reject(error);
+  //   }
+  // );
 
   return (
     <BrowserRouter>
-      {/* <nav className='header'>
-        <ul>
-          <li>
-            <NavLink to={'/'}>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to={'/questions'}>Questions</NavLink>
-          </li>
-          <li>
-            <NavLink to={'/auth/register'}>Signup</NavLink>
-          </li>
-          <li>
-            <NavLink to={'/auth/login'}>Login</NavLink>
-          </li>
-          <li>
-            <NavLink to={'/form'}>Form</NavLink>
-          </li>
-          <li>
-            <NavLink to={'/users'}>Users</NavLink>
-          </li>
-
-          <li>
-            <NavLink to={'/arts'}>Arts</NavLink>
-          </li>
-
-          <li>
-            <NavLink to={'/form'}>Form</NavLink>
-          </li>
-        </ul>
-      </nav> */}
-
-      <Layout key={reloadKey}>
+      <Layout>
         <Routes>
-          {/* <Route
-          path='/'
-          element={
-            <TodosContextProvider>
-              <HomeScreen />
-            </TodosContextProvider>
-          }
-        /> */}
-          {/* <Route path="/auth/change-password" element={<ChangePassword />} />
-          <Route path="/form" element={<FormScreen />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/" element={<CreateArtScreen />} />
-          <Route path="/arts" element={<ArtsScreen />} />
-          <Route path="/art" element={<Art />} />
-          <Route path="/arts/:artId" element={<ArtScreen />} /> */}
-
-          <Route path='/auth/register' element={<Signup />} />
-          <Route path='/auth/login' element={<Login />} />
-
-          <Route path='/' element={<UsersScreen />} />
-          <Route path='/search' element={<SearchScreen />} />
-          <Route path='/questions' element={<QuestionsScreen />} />
-          <Route path='/strapi' element={<StrapiCrud />} />
-          <Route path='/products' element={<Products />} />
+          <Route path="/" element={<Navigate to="/products" replace />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/auth/register" element={<Signup />} />
+          <Route path="/auth/login" element={<Login />} />
           <Route
-            path='/dashboard'
+            path="/dashboard"
             element={<ProtectedRoute Component={Dashboard} />}
           />
-          <Route path='/products/:id' element={<Product />} />
-          <Route path='*' element={<PageNotFound />} />
+          <Route path="/products/:id" element={<Product />} />
+
+          {/* if user go to any route from URl that does not exists then its your choice either show him a 404 not found page or simply redirect to website home page  */}
+          <Route path="*" element={<PageNotFound />} />
+
+          {/* OR  */}
+          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
         </Routes>
         <AuthVerify logout={logout} />
       </Layout>

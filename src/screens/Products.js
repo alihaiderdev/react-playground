@@ -1,9 +1,9 @@
-import { Pagination } from 'antd';
-import React, { memo, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import LoadingSkeleton from '../components/LoadingSkeleton';
-import ProductItem from '../components/ProductItem';
-import { fetchProducts } from '../store/Slices/productSlice';
+import { Pagination } from "antd";
+import React, { memo, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import LoadingSkeleton from "../components/LoadingSkeleton";
+import ProductItem from "../components/ProductItem";
+import { fetchProducts } from "../store/Slices/productSlice";
 
 const showTotal = (total) => `${total} Total Items: `;
 
@@ -33,13 +33,13 @@ const Products = () => {
   }, [itemsPerPage, currentPageNumber]);
 
   return (
-    <section className='text-gray-600 body-font'>
+    <section className="text-gray-600 body-font">
       {!isLoading && error && <h1>{error}</h1>}
       {isLoading ? (
         <LoadingSkeleton />
       ) : (
         <>
-          <div className='flex flex-wrap -m-4'>
+          <div className="flex flex-wrap -m-4">
             {products?.length > 0 &&
               products?.map((product) => {
                 return (
@@ -50,7 +50,7 @@ const Products = () => {
                 );
               })}
           </div>
-          <div className='w-full py-10'>
+          <div className="w-full py-10">
             <Pagination
               showSizeChanger
               onShowSizeChange={onShowSizeChange}
@@ -60,7 +60,7 @@ const Products = () => {
               current={currentPageNumber}
               onChange={onPageChange}
               hideOnSinglePage={true}
-              pageSizeOptions={['10', '50', '100', '200']}
+              pageSizeOptions={["10", "50", "100", "200"]}
               responsive={true}
               // defaultCurrent={currentPageNumber}
             />

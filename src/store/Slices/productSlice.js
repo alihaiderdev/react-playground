@@ -1,20 +1,20 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
   isLoading: false,
   products: [],
-  error: '',
+  error: "",
   meta: {},
   productsInCart: [],
 };
 
 export const fetchProducts = createAsyncThunk(
-  'product/fetchProducts',
+  "product/fetchProducts",
   (url) => {
     return axios(url, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     })
       .then(({ data }) => {
@@ -25,11 +25,11 @@ export const fetchProducts = createAsyncThunk(
 );
 
 export const fetchCartProductsList = createAsyncThunk(
-  'product/fetchCartProductsList',
+  "product/fetchCartProductsList",
   (url) => {
     return axios(url, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     })
       .then(({ data }) => data.data)
@@ -38,7 +38,7 @@ export const fetchCartProductsList = createAsyncThunk(
 );
 
 const productSlice = createSlice({
-  name: 'product',
+  name: "product",
   initialState,
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state) => {

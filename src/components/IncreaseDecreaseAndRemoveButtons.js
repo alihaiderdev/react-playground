@@ -1,9 +1,8 @@
-import React from "react";
-import { useShoppingCart } from "../context/CartContext";
+import { useAuthAndCartContext } from "../context";
 
 const IncreaseDecreaseAndRemoveButtons = ({ id, quantity, qty }) => {
   const { increaseCartQuantity, decreaseCartQuantity, removeFromCart } =
-    useShoppingCart();
+    useAuthAndCartContext();
   return (
     <div className="flex items-center flex-col gap-2">
       <div className="flex items-center justify-center gap-2">

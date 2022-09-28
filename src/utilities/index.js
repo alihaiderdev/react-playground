@@ -1,15 +1,16 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { message } from 'antd';
-import axios from 'axios';
-import { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { message } from "antd";
+import axios from "axios";
+import { useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { constant } from "../constants";
 
 export const placeholderImageUrl =
-  'https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/quickbooks/web/content/default-placeholder.png';
+  "https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/quickbooks/web/content/default-placeholder.png";
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat(undefined, {
-  style: 'currency',
-  currency: 'USD',
+  style: "currency",
+  currency: "USD",
 });
 
 export function formatCurrency(number) {
@@ -17,11 +18,7 @@ export function formatCurrency(number) {
 }
 
 export const imageUrlFormatter = (url) => {
-  if (url) {
-    const SERVER_URL =
-      process.env.REACT_APP_SERVER_URL || `http://localhost:1337`;
-    return `${SERVER_URL}${url}`;
-  }
+  if (url) return `${constant.SERVER_BASE_URL}${url}`;
 };
 
 export const imageErrorHandler = (currentTarget) => {
@@ -36,9 +33,9 @@ export const imageErrorHandler = (currentTarget) => {
 // https://fireship.io/snippets/currency-formatting/
 
 export const convertToUSD = (number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     // notation: "compact",
     // compactDisplay: "short",
   }).format(number);
@@ -71,7 +68,7 @@ export const withRouter = (Component) => {
 
 const parseJwt = (token) => {
   try {
-    return JSON.parse(atob(token.split('.')[1]));
+    return JSON.parse(atob(token.split(".")[1]));
   } catch (e) {
     return null;
   }
@@ -84,10 +81,10 @@ const parseJwt = (token) => {
 const AuthVerify = (props) => {
   let location = useLocation();
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem("user"));
     if (Object.keys(user || {})?.length > 0) {
-      const decodedJwt = parseJwt(user.jwt);
-      if (decodedJwt.exp * 1000 < Date.now()) {
+      const decodedJwt = parseJwt(user?.jwt);
+      if (decodedJwt?.exp * 1000 < Date.now()) {
         props.logout();
       }
     }
@@ -114,11 +111,7 @@ export const getIds = (items) => {
 
 export const getListAsync = ({ type, url }) =>
   createAsyncThunk(type, (url) => {
-    return axios(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    return axios(url)
       .then(({ data }) => ({ products: data.data, meta: data.meta.pagination }))
       .catch((error) => error.message);
   });
