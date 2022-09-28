@@ -1,11 +1,16 @@
-import { Drawer } from "antd";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useAuthAndCartContext } from "../context";
-import { fetchCartProductsList } from "../store/Slices/productSlice";
-import { convertToUSD } from "../utilities";
-import CartItem from "./CartItem";
+import { loadStripe } from '@stripe/stripe-js';
+import { Drawer } from 'antd';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { constant } from '../constants';
+import { useAuthAndCartContext } from '../context';
+import { fetchCartProductsList } from '../store/Slices/productSlice';
+import { convertToUSD } from '../utilities';
+import CartItem from './CartItem';
+
+const stripePromise = loadStripe(constant.STRIPE_PK);
 
 export function ShoppingCart({ isOpen }) {
   const dispatch = useDispatch();
@@ -15,7 +20,7 @@ export function ShoppingCart({ isOpen }) {
 
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState({});
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const {
     isLoading,
@@ -26,7 +31,7 @@ export function ShoppingCart({ isOpen }) {
   useEffect(() => {
     const filterIds = cartItems
       .map((item, index) => `filters[id][$in][${index}]=${item.id}`)
-      .join("&");
+      .join('&');
     dispatch(
       fetchCartProductsList(`/api/products?${filterIds}&populate=image`)
     );
@@ -34,7 +39,7 @@ export function ShoppingCart({ isOpen }) {
 
   const login = () => {
     closeCart();
-    navigate("/auth/login");
+    navigate('/auth/login');
   };
 
   const calculateTotal = (cartItems) => {
@@ -46,57 +51,70 @@ export function ShoppingCart({ isOpen }) {
     }, 0);
   };
 
-  const checkout = () => {
+  const checkout = async () => {
     // https://dmitripavlutin.com/remove-object-property-javascript/
     const { id, ...billingAddress } = user?.user.billingAddress;
     const order = {
       total: calculateTotal(cartItems),
       user: user?.user.id,
-      status: "unpaid",
+      status: 'unpaid',
       products: cartItems?.map((item) => item.id),
       quantityWithProductIds: cartItems,
       address: billingAddress,
     };
     try {
+      setLoading(true);
+      const stripe = await stripePromise;
+      const { data } = await axios(`/api/orders`, {
+        method: 'POST',
+        data: JSON.stringify({ data: order }),
+      });
+      console.log(data?.data?.checkoutSession, data);
+      const result = await stripe.redirectToCheckout({
+        sessionId: data?.data?.checkoutSession,
+      });
+      console.log({ result });
     } catch (error) {
+      console.log({ error: error.message });
     } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Drawer
       title={`Cart (${cartQuantity})`}
-      placement="right"
+      placement='right'
       onClose={closeCart}
       open={isOpen}
-      size={"large"}
+      size={'large'}
       //   width={"30%"}
     >
       {!isLoading && _error && (
-        <h1 className="text-indigo-600 font-bold text-3xl">{_error}</h1>
+        <h1 className='text-indigo-600 font-bold text-3xl'>{_error}</h1>
       )}
       {isLoading ? (
-        <h1 className="text-indigo-600 font-bold text-3xl">Loading ...</h1>
+        <h1 className='text-indigo-600 font-bold text-3xl'>Loading ...</h1>
       ) : cartItems?.length > 0 ? (
         <>
-          <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-5">Product</div>
-            <div className="col-span-3">Quantity</div>
-            <div className="col-span-2">Price</div>
-            <div className="col-span-2">Total</div>
+          <div className='grid grid-cols-12 gap-3'>
+            <div className='col-span-5'>Product</div>
+            <div className='col-span-3'>Quantity</div>
+            <div className='col-span-2'>Price</div>
+            <div className='col-span-2'>Total</div>
           </div>
           {cartItems.map((item, index) => (
             <CartItem key={index} {...item} productsInCart={productsInCart} />
           ))}
-          <div className="flex justify-end items-center">
-            <span className="font-bold text-indigo-500 text-xl">
+          <div className='flex justify-end items-center'>
+            <span className='font-bold text-indigo-500 text-xl'>
               Total {convertToUSD(calculateTotal(cartItems))}
             </span>
           </div>
 
-          <div className="flex justify-between items-center pt-4">
+          <div className='flex justify-between items-center pt-4'>
             <button
-              className="capitalize bg-red-600 text-white font-semibold px-2 py-1 rounded-sm"
+              className='capitalize bg-red-600 text-white font-semibold px-2 py-1 rounded-sm'
               onClick={() => clearCart()}
             >
               Clear Cart
@@ -104,14 +122,14 @@ export function ShoppingCart({ isOpen }) {
             {Object.keys(user || {}).length > 0 ? (
               <button
                 onClick={() => checkout()}
-                className="capitalize bg-indigo-600 text-white font-semibold px-2 py-1 rounded-sm"
+                className='capitalize bg-indigo-600 text-white font-semibold px-2 py-1 rounded-sm'
               >
                 Checkout
               </button>
             ) : (
               <button
                 onClick={login}
-                className="capitalize bg-indigo-600 text-white font-semibold px-2 py-1 rounded-sm"
+                className='capitalize bg-indigo-600 text-white font-semibold px-2 py-1 rounded-sm'
               >
                 Login
               </button>
@@ -119,7 +137,7 @@ export function ShoppingCart({ isOpen }) {
           </div>
         </>
       ) : (
-        <h2 className="text-indigo-600 font-black text-xl text-center">
+        <h2 className='text-indigo-600 font-black text-xl text-center'>
           No items in cart
         </h2>
       )}
