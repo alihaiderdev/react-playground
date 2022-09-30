@@ -1,16 +1,18 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState = {
   isLoading: false,
   products: [],
-  error: "",
+  error: '',
   meta: {},
   productsInCart: [],
+  isLoadingCart: false,
+  errorCart: '',
 };
 
 export const fetchProducts = createAsyncThunk(
-  "product/fetchProducts",
+  'product/fetchProducts',
   (url) => {
     return axios(url)
       .then(({ data }) => {
@@ -21,7 +23,7 @@ export const fetchProducts = createAsyncThunk(
 );
 
 export const fetchCartProductsList = createAsyncThunk(
-  "product/fetchCartProductsList",
+  'product/fetchCartProductsList',
   (url) => {
     return axios(url)
       .then(({ data }) => data.data)
@@ -30,7 +32,7 @@ export const fetchCartProductsList = createAsyncThunk(
 );
 
 const productSlice = createSlice({
-  name: "product",
+  name: 'product',
   initialState,
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state) => {
@@ -46,12 +48,12 @@ const productSlice = createSlice({
       state.error = payload;
     });
     builder.addCase(fetchCartProductsList.pending, (state) => {
-      state.isLoading = true;
+      state.isLoadingCart = true;
     });
     builder.addCase(
       fetchCartProductsList.fulfilled,
       (state, { type, payload }) => {
-        state.isLoading = false;
+        state.isLoadingCart = false;
         state.productsInCart = payload;
         state.meta = payload.meta;
       }
@@ -59,8 +61,8 @@ const productSlice = createSlice({
     builder.addCase(
       fetchCartProductsList.rejected,
       (state, { type, payload }) => {
-        state.isLoading = false;
-        state.error = payload;
+        state.isLoadingCart = false;
+        state.errorCart = payload;
       }
     );
   },

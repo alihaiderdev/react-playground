@@ -1,16 +1,17 @@
+import { Spin } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuthAndCartContext } from '../context';
 
 const useOrder = (session_id) => {
-  const [order, setOrder] = useState(null);
+  const [order, setOrder] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const { user } = useAuthAndCartContext();
 
   useEffect(() => {
-    if (session_id) {
+    if (Object.keys(user || {}).length > 0) {
       const fetchOrder = async () => {
         try {
           setIsLoading(true);
@@ -18,7 +19,6 @@ const useOrder = (session_id) => {
             method: 'POST',
             data: JSON.stringify({ data: { checkout_session: session_id } }),
           });
-
           setOrder(data);
         } catch (error) {
           setError(error.message);
@@ -28,7 +28,7 @@ const useOrder = (session_id) => {
       };
       fetchOrder();
     }
-  }, [session_id]);
+  }, [Object.keys(user || {}).length]);
 
   return { order, isLoading, error };
 };
@@ -40,15 +40,21 @@ const OrderSuccess = () => {
 
   useEffect(() => {
     clearCart();
-    console.log(searchParams.get('session_id'));
+    console.log(order);
     console.log({ order, isLoading, error });
   }, []);
 
   return (
-    <div>
-      Your order has been confirm with the order id: {order.id} and status:{' '}
-      {order.status}
-    </div>
+    <>
+      {isLoading ? (
+        <Spin size='large' />
+      ) : (
+        <h1>
+          Your order has been confirm with the order id: {order.id} and status:{' '}
+          {order.status}
+        </h1>
+      )}
+    </>
   );
 };
 
