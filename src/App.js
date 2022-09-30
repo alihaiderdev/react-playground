@@ -1,17 +1,18 @@
 import axios from 'axios';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
+import { ProtectedRoutes } from './components/ProtectedRoute';
 import { constant } from './constants';
 import { useAuthAndCartContext } from './context';
 import Login from './screens/Auth/Login';
 import Signup from './screens/Auth/Signup';
-import Dashboard from './screens/Dashboard';
 import OrderFail from './screens/OrderFail';
+import Orders from './screens/Orders';
 import OrderSuccess from './screens/OrderSuccess';
 import PageNotFound from './screens/PageNotFound';
 import Product from './screens/Product';
 import Products from './screens/Products';
+import Profile from './screens/Profile';
 import AuthVerify from './utilities';
 
 const App = () => {
@@ -70,10 +71,34 @@ const App = () => {
           <Route path='/products' element={<Products />} />
           <Route path='/auth/register' element={<Signup />} />
           <Route path='/auth/login' element={<Login />} />
-          <Route
-            path='/dashboard'
-            element={<ProtectedRoute Component={Dashboard} />}
+          {/* <Route
+            path='/dashboard/orders'
+            element={<ProtectedRoutes Component={Orders} />}
           />
+          <Route
+            path='/dashboard/profile'
+            element={<ProtectedRoutes Component={Profile} />}
+          /> */}
+
+          <Route element={<ProtectedRoutes />}>
+            {/* <Route path='/dashboard/orders' element={<Orders />} />
+            <Route path='/dashboard/profile' element={<Profile />} /> */}
+
+            {/* <Route path='/dashboard' element={<Dashboard />}> */}
+            <Route path='/dashboard'>
+              <Route path='orders' element={<Orders />} />
+              <Route path='profile' element={<Profile />} />
+            </Route>
+          </Route>
+          {/* <Route
+            path='/dashboard/orders'
+            element={<ProtectedRoutes Component={Orders} />}
+          />
+          <Route
+            path='/dashboard/profile'
+            element={<ProtectedRoutes Component={Profile} />}
+          /> */}
+
           <Route path='/products/:id' element={<Product />} />
           <Route path='/order/success' element={<OrderSuccess />} />
           <Route path='/order/fail' element={<OrderFail />} />

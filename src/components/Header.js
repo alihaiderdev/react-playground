@@ -13,15 +13,19 @@ const Header = () => {
       <Menu
         items={[
           {
-            label: <Link to='/dashboard'>Dashboard</Link>,
+            label: <Link to='/dashboard/orders'>Dashboard</Link>,
             key: '0',
+          },
+          {
+            label: <Link to='/dashboard/profile'>Profile</Link>,
+            key: '1',
           },
           {
             type: 'divider',
           },
           {
             label: <span onClick={() => logout()}>Logout</span>,
-            key: '2',
+            key: '3',
           },
         ]}
       />

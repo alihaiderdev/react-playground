@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { constant } from '../constants';
 import { useAuthAndCartContext } from '../context';
 import { fetchCartProductsList } from '../store/Slices/productSlice';
-import { convertToUSD } from '../utilities';
+import { convertToUSD, error } from '../utilities';
 import CartItem from './CartItem';
 import LoadingButton from './LoadingButton';
 
@@ -52,17 +52,24 @@ export function ShoppingCart({ isOpen }) {
 
   const checkout = async () => {
     // https://dmitripavlutin.com/remove-object-property-javascript/
-    const { id, ...billingAddress } = user?.user.billingAddress;
-    const order = {
-      total: calculateTotal(cartItems),
-      user: user?.user.id,
-      status: 'unpaid',
-      products: cartItems?.map((item) => item.id),
-      quantityWithProductIds: cartItems,
-      address: billingAddress,
-    };
+
     try {
       setLoading(true);
+      if (!user?.user?.billingAddress) {
+        error('Please fill address filled first for shipping order!');
+        return;
+      }
+
+      const { id, ...billingAddress } = user?.user?.billingAddress;
+      const order = {
+        total: calculateTotal(cartItems),
+        user: user?.user.id,
+        status: 'unpaid',
+        products: cartItems?.map((item) => item.id),
+        quantityWithProductIds: cartItems,
+        address: billingAddress,
+      };
+
       const stripe = await stripePromise;
       const { data } = await axios(`/api/orders`, {
         method: 'POST',

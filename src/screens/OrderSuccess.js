@@ -40,8 +40,6 @@ const OrderSuccess = () => {
 
   useEffect(() => {
     clearCart();
-    console.log(order);
-    console.log({ order, isLoading, error });
   }, []);
 
   return (

@@ -31,10 +31,8 @@ const Products = () => {
         `/api/products?populate=image&pagination[page]=${currentPageNumber}&pagination[pageSize]=${itemsPerPage}`
       )
     );
-    console.log('useEffect');
   }, [itemsPerPage, currentPageNumber]);
 
-  console.log(isLoading);
   return (
     <section className='text-gray-600 body-font'>
       {!isLoading && error && <h1>{error}</h1>}
