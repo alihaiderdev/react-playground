@@ -35,7 +35,7 @@
   margin: 5rem auto;
 }
 
-.createArtScreen_form input[type='text'],
+.createArtScreen_form input[type="text"],
 .createArtScreen_form textarea {
   padding: 0.5rem;
   margin: 0.75rem 0;
@@ -81,6 +81,10 @@
 
 .ant-pagination-item-active a {
   color: #4f46e5;
+}
+
+.ant-pagination .ant-table-pagination .ant-table-pagination-right {
+  display: none !important;
 }
 
 /* ant spin color  */

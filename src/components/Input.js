@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
+import { useLocation } from "react-router-dom";
 
-const Input = ({ type, name, value, handler, isLabel = true }) => {
+const Input = ({
+  type,
+  name,
+  value,
+  handler,
+  isLabel = true,
+  ...restProps
+}) => {
   const [eyeToggler, setEyeToggler] = useState(false);
+  const { pathname } = useLocation();
+
   return (
     <div className="mb-4">
       {isLabel && (
@@ -15,6 +25,12 @@ const Input = ({ type, name, value, handler, isLabel = true }) => {
       )}
       <div className="relative">
         <input
+          disabled={
+            (name === "username" || name === "email") &&
+            pathname !== "/auth/register"
+              ? true
+              : false
+          }
           id={name}
           type={eyeToggler ? "text" : type}
           name={name}
@@ -24,6 +40,7 @@ const Input = ({ type, name, value, handler, isLabel = true }) => {
           value={value}
           onChange={handler}
           autoComplete="off"
+          {...restProps}
         />
         {type === "password" ? (
           eyeToggler ? (
