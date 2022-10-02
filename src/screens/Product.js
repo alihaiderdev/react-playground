@@ -1,4 +1,6 @@
 import { Rate } from "antd";
+import moment from "moment";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import IncreaseDecreaseAndRemoveButtons from "../components/IncreaseDecreaseAndRemoveButtons";
 import { useAuthAndCartContext } from "../context";
@@ -15,13 +17,14 @@ const description = ["terrible", "bad", "normal", "good", "wonderful"];
 const Product = () => {
   const { id: productId } = useParams();
   const { getItemQuantity } = useAuthAndCartContext();
+  const [reviews, setReviews] = useState([]);
 
   const {
     isLoading,
     error,
     data: { id, attributes },
   } = useRead({
-    url: `/api/products/${productId}?populate=user,image,reviews.user`,
+    url: `/api/products/${productId}?populate=image,reviews.user`,
   });
 
   const qty = getItemQuantity(id);
@@ -89,6 +92,64 @@ const Product = () => {
                 quantity={attributes?.quantity}
               />
             </div>
+
+            <section className="col-span-12">
+              <h1 class="mb-8 text-3xl font-heading font-medium leading-tight">
+                Reviews ({attributes?.reviews?.data?.length})
+              </h1>
+
+              {attributes?.reviews?.data?.length > 0 &&
+                attributes?.reviews?.data?.map(
+                  ({
+                    id,
+                    attributes: {
+                      content,
+                      rating,
+                      createdAt,
+                      user: {
+                        data: {
+                          attributes: { firstName, lastName, username },
+                        },
+                      },
+                    },
+                  }) => {
+                    return (
+                      <div className="mb-2 shadow-lg rounded-t-8xl rounded-b-5xl overflow-hidden">
+                        <div className="px-4 pt-4 md:px-12 bg-white bg-opacity-40">
+                          <div className="flex flex-wrap items-center">
+                            <h4 className="w-full md:w-auto text-xl font-heading font-medium">
+                              {firstName && lastName
+                                ? `${firstName} ${lastName}`
+                                : username}
+                            </h4>
+                            <div className="w-full md:w-px h-2 md:h-8 mx-8 bg-transparent md:bg-gray-200"></div>
+                            <span className="mr-4 text-xl font-heading font-medium">
+                              {rating.toString().length === 1
+                                ? `${rating}.0`
+                                : rating}
+                            </span>
+                            <Rate disabled allowHalf defaultValue={rating} />
+                          </div>
+                        </div>
+                        <div className="px-4 pt-4 pb-8 md:px-12 overflow-hidden bg-white">
+                          <div className="flex flex-wrap">
+                            <div className="w-full md:w-2/3 mb-6 md:mb-0">
+                              <p className="max-w-2xl text-gray-400 leading-loose">
+                                {content}
+                              </p>
+                            </div>
+                            <div className="w-full md:w-1/3 text-right">
+                              <p className="text-sm text-gray-400">
+                                {moment(createdAt).fromNow()}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                )}
+            </section>
           </>
         )
       )}

@@ -62,11 +62,12 @@ const Profile = () => {
       const { data } = await axios(`/api/users/${user?.user?.id}`, {
         method: "PUT",
         data: JSON.stringify(userDetails),
+        // data: formData,
       });
 
       if (Object.keys(data).length > 0) {
         const { data: userData } = await axios(
-          `/api/users/${data?.id}?populate=firstName, lastName, billingAddress, profile`
+          `/api/users/${data?.id}?populate=firstName,lastName,billingAddress,profile`
         );
 
         login({

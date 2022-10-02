@@ -47,6 +47,7 @@ const columns = [
 
 const Orders = () => {
   const { user } = useAuthAndCartContext();
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [_isLoading, _setIsLoading] = useState(false);
   const [_error, _setError] = useState("");
@@ -54,24 +55,42 @@ const Orders = () => {
   let [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [reloadKey, setReloadKey] = useState(Math.random());
+
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 2,
+    },
+  });
+
+  const {
+    pagination: { current, pageSize },
+  } = tableParams;
 
   const getAllOrders = async () => {
     try {
       setIsLoading(true);
       const { data } = await axios(
-        `/api/orders?populate=user&filters[user]=${user?.user?.id}`
+        `/api/orders?populate=user&filters[user]=${user?.user?.id}&pagination[page]=${current}&pagination[pageSize]=${pageSize}`
       );
       setOrders(data?.data);
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: data?.meta?.pagination?.total,
+        },
+      });
     } catch (error) {
       setError(error.message);
     } finally {
       setIsLoading(false);
     }
   };
+
   useEffect(async () => {
     await getAllOrders();
-  }, [user?.user?.id]);
+  }, [user?.user?.id, current, orders?.length]);
 
   const deleteMany = async () => {
     if (
@@ -89,11 +108,20 @@ const Orders = () => {
         orders = orders.filter((order) => order.id !== selectedRow);
         setOrders(orders);
       });
+      setSelectedRowKeys([]);
     } catch (error) {
       _setError(error.message);
     } finally {
       _setIsLoading(false);
     }
+  };
+
+  const handleTableChange = (pagination, filters, sorter) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    });
   };
 
   return (
@@ -103,8 +131,8 @@ const Orders = () => {
 
       {isLoading || _isLoading ? (
         <Spinner />
-      ) : (
-        <>
+      ) : orders?.length > 0 ? (
+        <section>
           <div className="mb-4">
             <button
               className="bg-red-600 text-white font-semibold px-2 py-1 rounded-sm"
@@ -113,8 +141,13 @@ const Orders = () => {
               loading={_isLoading}
             >
               {_isLoading && <Spin size="small" className="mr-2" />}
-              Delete {selectedRowKeys.length ? selectedRowKeys.length : null}
+              Delete
             </button>
+            {selectedRowKeys.length > 0 && (
+              <span className="ml-4">
+                Selected {selectedRowKeys.length} items
+              </span>
+            )}
           </div>
           <Table
             rowSelection={{
@@ -142,8 +175,13 @@ const Orders = () => {
                 createdAt: moment(createdAt).fromNow(),
               })
             )}
+            pagination={tableParams.pagination}
+            loading={isLoading}
+            onChange={handleTableChange}
           />
-        </>
+        </section>
+      ) : (
+        <h1>No orders placed yet!</h1>
       )}
     </div>
   );
