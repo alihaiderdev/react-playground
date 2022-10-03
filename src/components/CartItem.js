@@ -4,7 +4,7 @@ import {
   imageUrlFormatter,
   placeholderImageUrl,
 } from '../utilities';
-import IncreaseDecreaseAndRemoveButtons from './IncreaseDecreaseAndRemoveButtons';
+import { IncreaseDecreaseAndRemoveButtons } from './IncreaseDecreaseAndRemoveButtons';
 
 const CartItem = ({ id, quantity, productsInCart }) => {
   const item = productsInCart?.find((product) => product.id === id)?.attributes;
