@@ -81,6 +81,7 @@ const Product = () => {
       setRating(0);
       getAllReviewsByProductId();
     } catch (error) {
+      message.error('Error while posting review!');
     } finally {
       setLoading(false);
     }
