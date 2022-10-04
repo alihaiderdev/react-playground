@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { createContext, useContext, useState } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const Context = createContext();
 
@@ -9,8 +9,9 @@ export const useAuthAndCartContext = () => {
 
 export const AuthAndCartProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [cartItems, setCartItems] = useLocalStorage("cart", []);
-  const [user, setUser] = useLocalStorage("user", {});
+  const [cartItems, setCartItems] = useLocalStorage('cart', []);
+  const [user, setUser] = useLocalStorage('user', {});
+  const [review, setReview] = useLocalStorage('review', {});
 
   const cartQuantity = cartItems.reduce(
     (quantity, item) => item.quantity + quantity,

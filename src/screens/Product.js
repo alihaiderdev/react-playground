@@ -1,8 +1,9 @@
-import { Rate } from 'antd';
+import { message, Rate, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { IncreaseDecreaseAndRemoveButtons } from '../components/IncreaseDecreaseAndRemoveButtons';
+import Review from '../components/Review';
 import { useAuthAndCartContext } from '../context';
 import {
   convertToUSD,
@@ -24,13 +25,14 @@ const Product = () => {
 
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState('');
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getProductDetails = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios(
-        `/api/products/${productId}?populate=image,reviews.user`
-      );
+      const { data } = await axios(`/api/products/${productId}?populate=image`);
+
       setProduct(data?.data);
     } catch (error) {
       setError(error.message);
@@ -39,21 +41,36 @@ const Product = () => {
     }
   };
 
+  const getAllReviewsByProductId = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios(
+        `/api/reviews?filters[product][id]=${productId}&populate=user`
+      );
+      setReviews(data?.data);
+    } catch (error) {
+      message.error('Error while getting reviews!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (productId) {
       getProductDetails();
+      getAllReviewsByProductId();
     }
   }, [productId]);
 
   const reviewSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
+      setLoading(true);
       await axios(`/api/reviews`, {
         method: 'POST',
         data: JSON.stringify({
           data: {
-            content,
+            content: content.trim(),
             rating,
             user: user?.user?.id,
             product: +productId,
@@ -62,10 +79,10 @@ const Product = () => {
       });
       setContent('');
       setRating(0);
-      getProductDetails();
+      getAllReviewsByProductId();
     } catch (error) {
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -134,10 +151,9 @@ const Product = () => {
                 quantity={attributes?.quantity}
               />
             </div>
-
             <section className='col-span-8'>
               {Object.keys(user || {}).length > 0 ? (
-                <form onSubmit={reviewSubmitHandler} className='mt-8'>
+                <form className='mt-8' onSubmit={reviewSubmitHandler}>
                   <h1 className='text-indigo-600 text-xl font-semibold mb-4'>
                     Give your valuable review!
                   </h1>
@@ -145,31 +161,30 @@ const Product = () => {
                     <div className='col-span-12 md:col-span-6 flex'>
                       <label
                         className='m-0 text-lg capitalize font-black text-indigo-600 text-left block'
-                        htmlFor={'rating'}
+                        htmlFor={'content'}
                       >
                         Content:
                       </label>
                       <textarea
+                        id='content'
                         rows={5}
                         value={content}
                         name='content'
+                        required
                         onChange={(e) => setContent(e.target.value)}
                         placeholder='Write your review'
                         className='ml-4 w-full rounded-md px-2 py-3 outline-none resize-none border-solid border-2 border-indigo-600'
                       />
                     </div>
                     <div className='col-span-12 md:col-span-6 flex'>
-                      <label
-                        className='m-0 text-lg capitalize font-black text-indigo-600 text-left block'
-                        htmlFor={'rating'}
-                      >
+                      <label className='m-0 text-lg capitalize font-black text-indigo-600 text-left block'>
                         Rating:
                       </label>
                       <Rate
                         allowHalf
                         value={rating}
                         onChange={(value) => setRating(value)}
-                        className='mb-4 ml-4'
+                        className='mb-4 ml-4 text-indigo-600'
                       />
                     </div>
                   </div>
@@ -193,25 +208,31 @@ const Product = () => {
                   </h1>
                 </div>
               )}
-              {attributes?.reviews?.data?.length > 0 ? (
+
+              {loading ? (
+                <Spin />
+              ) : !loading && reviews?.length > 0 ? (
                 <>
                   <h1 className='mb-8 text-3xl font-heading font-medium leading-tight'>
-                    Reviews ({attributes?.reviews?.data?.length})
+                    Reviews ({reviews?.length})
                   </h1>
-                  {console.log(attributes?.reviews?.data)}
-                  {/* <ul>
-                    {attributes?.reviews?.data?.map((review) => (
-                      <Review
-                        review={review}
-                        key={id}
-                        getProductDetails={getProductDetails}
-                      />
-                    ))}
-                  </ul> */}
+
+                  <ul>
+                    {reviews?.map((review) => {
+                      return (
+                        <Review
+                          review={review}
+                          key={review?.id}
+                          getAllReviewsByProductId={getAllReviewsByProductId}
+                        />
+                      );
+                    })}
+                  </ul>
                 </>
               ) : (
                 <h1>No reviews yet!</h1>
               )}
+              {}
             </section>
           </>
         )

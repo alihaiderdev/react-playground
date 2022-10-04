@@ -6,37 +6,8 @@ import { useParams } from 'react-router-dom';
 import { useAuthAndCartContext } from '../context';
 import { success } from '../utilities';
 
-const Review = ({ review, getProductDetails }) => {
-  const params = useParams();
-  const [isLoading, setIsLoading] = useState(false);
-
-  // const deleteReview = useCallback(() => {
-  //   return async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       await axios(`/api/reviews/`);
-  //     } catch (error) {
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  // }, []);
-
-  const deleteReview = async (reviewId) => {
-    try {
-      setIsLoading(true);
-      await axios.delete(`/api/reviews/${reviewId}?productId=${params.id}`);
-      success('Review deleted successfully!');
-      getProductDetails();
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const { user } = useAuthAndCartContext();
+const Review = ({ review, getAllReviewsByProductId }) => {
   const {
-    id,
     attributes: {
       content,
       rating,
@@ -48,7 +19,23 @@ const Review = ({ review, getProductDetails }) => {
         },
       },
     },
+    id,
   } = review;
+  const params = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuthAndCartContext();
+
+  const deleteReview = async (reviewId) => {
+    try {
+      setIsLoading(true);
+      await axios.delete(`/api/reviews/${reviewId}?productId=${params.id}`);
+      success('Review deleted successfully!');
+      getAllReviewsByProductId();
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <li className='mb-2 shadow-xl rounded-t-8xl rounded-b-5xl overflow-hidden'>
