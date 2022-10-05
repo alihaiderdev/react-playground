@@ -47,9 +47,11 @@ export const Search = () => {
         >
           Back to Home
         </button>
-        <h1 className='text-3xl font-black text-center text-indigo-600'>
-          Search Results: ({products?.length})
-        </h1>
+        {products?.length > 0 && (
+          <h1 className='text-3xl font-black text-center text-indigo-600'>
+            Search Results: ({meta?.total})
+          </h1>
+        )}
       </div>
       {!isLoading && error && <h1>{error}</h1>}
       {isLoading ? (

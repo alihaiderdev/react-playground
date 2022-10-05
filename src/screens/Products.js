@@ -3,7 +3,6 @@ import React, { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import ProductItem from '../components/ProductItem';
-import Search from '../components/Search';
 import { fetchProducts } from '../store/Slices/productSlice';
 
 const showTotal = (total) => `${total} Total Items: `;
@@ -36,7 +35,6 @@ const Products = () => {
 
   return (
     <section className='text-gray-600 body-font'>
-      <Search />
       {!isLoading && error && <h1>{error}</h1>}
       {isLoading ? (
         <LoadingSkeleton />
