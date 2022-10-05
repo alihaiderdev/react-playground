@@ -20,10 +20,7 @@ const Search = () => {
         handler={(e) => setQuery(e.target.value)}
       />
 
-      <button
-        type={'submit'}
-        className='bg-indigo-600 p-3 text-white rounded-md'
-      >
+      <button className='bg-indigo-600 p-3 text-white rounded-md mb-4 ml-4'>
         Search
       </button>
     </form>

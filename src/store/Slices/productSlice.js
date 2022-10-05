@@ -9,10 +9,24 @@ const initialState = {
   productsInCart: [],
   isLoadingCart: false,
   errorCart: '',
+  searchProducts: [],
+  searchMeta: {},
+  searchLoading: false,
+  searchError: '',
 };
 
 export const fetchProducts = createAsyncThunk(
   'product/fetchProducts',
+  (url) => {
+    return axios(url)
+      .then(({ data }) => {
+        return { products: data.data, meta: data.meta.pagination };
+      })
+      .catch((error) => error.message);
+  }
+);
+export const fetchSearchProducts = createAsyncThunk(
+  'product/fetchSearchProducts',
   (url) => {
     return axios(url)
       .then(({ data }) => {
@@ -55,7 +69,6 @@ const productSlice = createSlice({
       (state, { type, payload }) => {
         state.isLoadingCart = false;
         state.productsInCart = payload;
-        state.meta = payload.meta;
       }
     );
     builder.addCase(
@@ -63,6 +76,24 @@ const productSlice = createSlice({
       (state, { type, payload }) => {
         state.isLoadingCart = false;
         state.errorCart = payload;
+      }
+    );
+    builder.addCase(fetchSearchProducts.pending, (state) => {
+      state.searchLoading = true;
+    });
+    builder.addCase(
+      fetchSearchProducts.fulfilled,
+      (state, { type, payload }) => {
+        state.searchLoading = false;
+        state.searchProducts = payload.products;
+        state.searchMeta = payload.meta;
+      }
+    );
+    builder.addCase(
+      fetchSearchProducts.rejected,
+      (state, { type, payload }) => {
+        state.searchLoading = false;
+        state.searchError = payload;
       }
     );
   },

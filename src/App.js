@@ -13,6 +13,7 @@ import PageNotFound from './screens/PageNotFound';
 import Product from './screens/Product';
 import Products from './screens/Products';
 import Profile from './screens/Profile';
+import { Search } from './screens/Search';
 import AuthVerify from './utilities';
 
 const App = () => {
@@ -69,6 +70,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Navigate to='/products' replace />} />
           <Route path='/products' element={<Products />} />
+          <Route path='/search' element={<Search />} />
           <Route path='/auth/register' element={<Signup />} />
           <Route path='/auth/login' element={<Login />} />
           {/* <Route
