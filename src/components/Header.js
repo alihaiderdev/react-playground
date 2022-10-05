@@ -92,7 +92,7 @@ const Header = () => {
               </Link>
             </>
           )}
-          {cartQuantity && (
+          {cartQuantity ? (
             <button
               onClick={openCart}
               className='inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 text-base mt-4 md:mt-0 relative rounded-full w-12 h-12 ml-4'
@@ -114,7 +114,7 @@ const Header = () => {
                 {cartQuantity}
               </div>
             </button>
-          )}
+          ) : null}
         </div>
       </div>
       <ShoppingCart isOpen={isOpen} />
