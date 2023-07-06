@@ -6,12 +6,10 @@ import {
   imageUrlFormatter,
   placeholderImageUrl,
 } from '../utilities';
-import IncreaseDecreaseAndRemoveButtons from './IncreaseDecreaseAndRemoveButtons';
+import { IncreaseDecreaseAndRemoveButtons } from './IncreaseDecreaseAndRemoveButtons';
 
-const ProductItem = ({
-  product: { id, title, price, image, description, quantity },
-}) => {
-  const { getItemQuantity, increaseCartQuantity } = useAuthAndCartContext();
+const ProductItem = ({ product: { id, title, price, image, quantity } }) => {
+  const { getItemQuantity } = useAuthAndCartContext();
 
   const qty = getItemQuantity(id);
 

@@ -1,20 +1,25 @@
 import { Pagination } from 'antd';
-import React, { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import ProductItem from '../components/ProductItem';
-import { fetchProducts } from '../store/Slices/productSlice';
+import { fetchSearchProducts } from '../store/Slices/productSlice';
 
 const showTotal = (total) => `${total} Total Items: `;
-
-const Products = () => {
-  // http://localhost:1337/api/products?populate=user,image,categories,reviews.user
-  const { isLoading, products, error, meta } = useSelector(
-    (state) => state.product
-  );
+export const Search = () => {
+  const dispatch = useDispatch(),
+    navigate = useNavigate();
+  const [searchParams, _] = useSearchParams();
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
-  const dispatch = useDispatch();
+
+  const {
+    searchLoading: isLoading,
+    searchProducts: products,
+    searchError: error,
+    searchMeta: meta,
+  } = useSelector((state) => state.product);
 
   const onShowSizeChange = (current, pageSize) => {
     setItemsPerPage(pageSize);
@@ -25,20 +30,33 @@ const Products = () => {
   };
 
   useEffect(() => {
+    const query = searchParams.get('q');
     dispatch(
-      fetchProducts(
-        // `/api/products?filters[available]=true&populate=image&pagination[page]=${currentPageNumber}&pagination[pageSize]=${itemsPerPage}`
-        `/api/products?populate=image&pagination[page]=${currentPageNumber}&pagination[pageSize]=${itemsPerPage}`
+      fetchSearchProducts(
+        `/api/products?filters[$or][0][title][$containsi]=${query}&filters[$or][1][description][$containsi]=${query}&populate=image&pagination[page]=${currentPageNumber}&pagination[pageSize]=${itemsPerPage}`
       )
     );
-  }, [itemsPerPage, currentPageNumber]);
+  }, [searchParams.get('q'), itemsPerPage, currentPageNumber]);
 
   return (
-    <section className='text-gray-600 body-font'>
+    <>
+      <div className='flex items-center justify-between mb-4'>
+        <button
+          className='bg-indigo-600 p-3 text-white rounded-md'
+          onClick={() => navigate('/products')}
+        >
+          Back to Home
+        </button>
+        {products?.length > 0 && (
+          <h1 className='text-3xl font-black text-center text-indigo-600'>
+            Search Results: ({meta?.total})
+          </h1>
+        )}
+      </div>
       {!isLoading && error && <h1>{error}</h1>}
       {isLoading ? (
         <LoadingSkeleton />
-      ) : (
+      ) : !isLoading && products?.length > 0 ? (
         <>
           <div className='flex flex-wrap -m-4'>
             {products?.length > 0 &&
@@ -63,13 +81,14 @@ const Products = () => {
               hideOnSinglePage={true}
               pageSizeOptions={['10', '50', '100', '200']}
               responsive={true}
-              // defaultCurrent={currentPageNumber}
             />
           </div>
         </>
+      ) : (
+        <h1 className='text-3xl font-black text-center my-5 text-indigo-600'>
+          No result found by your query "{searchParams.get('q')}"
+        </h1>
       )}
-    </section>
+    </>
   );
 };
-
-export default memo(Products);

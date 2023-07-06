@@ -9,7 +9,6 @@ const SearchScreen = () => {
   const dispatch = useDispatch(),
     navigate = useNavigate();
   const { isLoading, error, users, total } = useSelector((state) => state.user);
-  // console.log({ isLoading, error, users, total });
 
   useEffect(() => {
     dispatch(fetchUsers(searchParams.get('q')));
