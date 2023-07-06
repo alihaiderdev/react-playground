@@ -14,6 +14,7 @@ import Product from './screens/Product';
 import Products from './screens/Products';
 import Profile from './screens/Profile';
 import AuthVerify from './utilities';
+import Quiz from './screens/Quiz';
 
 const App = () => {
   // const { pathname } = useLocation();
@@ -65,13 +66,14 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path='/' element={<Navigate to='/products' replace />} />
-          <Route path='/products' element={<Products />} />
-          <Route path='/auth/register' element={<Signup />} />
-          <Route path='/auth/login' element={<Login />} />
-          {/* <Route
+      {/* <Layout> */}
+      <Routes>
+        <Route path='/quiz' element={<Quiz />} />
+        <Route path='/' element={<Navigate to='/products' replace />} />
+        <Route path='/products' element={<Products />} />
+        <Route path='/auth/register' element={<Signup />} />
+        <Route path='/auth/login' element={<Login />} />
+        {/* <Route
             path='/dashboard/orders'
             element={<ProtectedRoutes Component={Orders} />}
           />
@@ -80,17 +82,17 @@ const App = () => {
             element={<ProtectedRoutes Component={Profile} />}
           /> */}
 
-          <Route element={<ProtectedRoutes />}>
-            {/* <Route path='/dashboard/orders' element={<Orders />} />
+        <Route element={<ProtectedRoutes />}>
+          {/* <Route path='/dashboard/orders' element={<Orders />} />
             <Route path='/dashboard/profile' element={<Profile />} /> */}
 
-            {/* <Route path='/dashboard' element={<Dashboard />}> */}
-            <Route path='/dashboard'>
-              <Route path='orders' element={<Orders />} />
-              <Route path='profile' element={<Profile />} />
-            </Route>
+          {/* <Route path='/dashboard' element={<Dashboard />}> */}
+          <Route path='/dashboard'>
+            <Route path='orders' element={<Orders />} />
+            <Route path='profile' element={<Profile />} />
           </Route>
-          {/* <Route
+        </Route>
+        {/* <Route
             path='/dashboard/orders'
             element={<ProtectedRoutes Component={Orders} />}
           />
@@ -99,18 +101,18 @@ const App = () => {
             element={<ProtectedRoutes Component={Profile} />}
           /> */}
 
-          <Route path='/products/:id' element={<Product />} />
-          <Route path='/order/success' element={<OrderSuccess />} />
-          <Route path='/order/fail' element={<OrderFail />} />
+        <Route path='/products/:id' element={<Product />} />
+        <Route path='/order/success' element={<OrderSuccess />} />
+        <Route path='/order/fail' element={<OrderFail />} />
 
-          {/* if user go to any route from URl that does not exists then its your choice either show him a 404 not found page or simply redirect to website home page  */}
-          <Route path='*' element={<PageNotFound />} />
+        {/* if user go to any route from URl that does not exists then its your choice either show him a 404 not found page or simply redirect to website home page  */}
+        <Route path='*' element={<PageNotFound />} />
 
-          {/* OR  */}
-          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-        </Routes>
-        <AuthVerify logout={logout} />
-      </Layout>
+        {/* OR  */}
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+      </Routes>
+      <AuthVerify logout={logout} />
+      {/* </Layout> */}
     </BrowserRouter>
   );
 };
